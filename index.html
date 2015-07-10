@@ -5,82 +5,100 @@
         <link rel="stylesheet" href="style.css">
     </head>
 
-    <script src="lib/pixi/pixi.js"></script>
-    <!-- script src="lib/dash/dash.all.js"></script -->
     <body>
+        <div id='montage'></div>
+
 <script>
+    // define size of montage area
+    var width = 960, height = 540;
 
-    var renderer = PIXI.autoDetectRenderer(1920/2, 1084/2, { transparent: true });
-    document.body.appendChild(renderer.view);
-
-    // create the root of the scene graph
-    var stage = new PIXI.Container();
-    var vidPath = '/videos/';
+    // define source material
+    var vidPath = 'videos/';
     var vids = ['autumnwatch.mp4', 'philharmonic.webm',
         '4-News-ch-greece-2.webm', 'autumnwatch.mp4'];
 
     // work out positions
     var x = [0, 0.5, 0, 0.5];
     var y = [0,0,0.5,0.5];
-    var crops = [1, null, 2, null];
+    var cropA = {w:width/4, h:height/4, x:width/4, y:height/4};
+    var cropB = {w:(3*width)/8, h:(3*height/8), x:width/8, y:height/8};
+    var crops = [cropB, null, cropA, null];
     var placements = [];
     for(var i=0; i<vids.length; i++){
         var pos = {
-            w:renderer.width/2,
-            h:renderer.height/2,
-            x: renderer.width*x[i],
-            y: renderer.height*y[i]
+            w:width/2,
+            h:height/2,
+            x: width*x[i],
+            y: height*y[i]
         }
         placements.push(pos);
     }
 
     // add videos
-    var txts = [];
+    var vidElements = [];
     for(var i=0; i<vids.length; i++){
-        var t = addVideoStream(vidPath + vids[i], stage, placements[i], crops[i]);
-        txts.push(t);
-    }
-    animate();
-
-    // play and pause
-    setTimeout(function(){
-        var videl = txts[0].baseTexture.source;
-        console.log(videl.currentTime);
-        videl.currentTime = 215;
-        // videl.pause();
-        // videl.currentSrc = videl.currentSrc + "#t=20,40";
-    }, 5000);
-
-    // render the stage
-    function animate(){
-
-        // render the stage
-        renderer.render(stage);
-
-        requestAnimationFrame(animate);
-
+        var t = addVideoStream("vid" + i, vidPath + vids[i], placements[i], crops[i]);
+        vidElements.push(t);
+        // t.play();
     }
 
-    function addVideoStream(vid, stage, pos, crop){
-        // create a video texture from a path
-        var texture = PIXI.Texture.fromVideo(vid);
+    // Add a video sream to the montage
+    // at specified postion with (optional) cropping
+    function addVideoStream(vidid, vid, pos, crop){
 
-        // apply crop
+        var vidEl = document.createElement('video');
+        vidEl.width = pos.w;
+        vidEl.height = pos.h;
+        vidEl.id = vidid;
+
+        var cropEl = document.createElement('div');
+        cropEl.className = 'crop';
+        cropEl.style.top = pos.y + "px";
+        cropEl.style.left = pos.x + "px";
+
+        cropEl.appendChild(vidEl);
         if (crop != null){
-            var cropRect = new PIXI.Rectangle(100, 100, 1920/4, 1280/4);
-            texture = new PIXI.Texture(texture, cropRect);
+            cropEl.style.width = pos.w;
+            cropEl.style.height = pos.h;
+            vidEl.style.marginLeft = -crop.x + "px";
+            vidEl.style.marginTop = -crop.y + "px";
+            vidEl.width = pos.w * (pos.w/crop.w);
+            vidEl.height = pos.h * (pos.h/crop.h);
         }
 
-        // create a new Sprite using the video texture (yes it's that easy)
-        var videoSprite = new PIXI.Sprite(texture);
+        // vidEl.controls = true;
+        vidEl.src = vid;
+        vidEl.autoplay = true;
 
-        videoSprite.width = pos.w; //renderer.width/2;
-        videoSprite.height = pos.h;
-        videoSprite.x = pos.x; //renderer.width/2;
-        videoSprite.y = pos.y; //renderer.width/2;
-        stage.addChild(videoSprite);
-        return texture;
+        var container = document.getElementById('montage');
+        container.appendChild(cropEl);
+        return vidEl;
     }
+
+
+    /****
+    play, pause, skip, replace individual streams
+    ****/
+    function play(streamNo){
+        var videl = vidElements[streamNo];
+        videl.play();
+    }
+
+    function pause(streamNo){
+        var videl = vidElements[streamNo];
+        videl.pause();
+    }
+
+    function skipTo(streamNo, time){
+        var videl = vidElements[streamNo];
+        videl.currentTime = time;
+    }
+
+    function replace(streamNo, path){
+        var videl = vidElements[streamNo];
+        videl.src = path;
+    }
+
 
 </script>
 </body>
