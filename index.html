@@ -16,7 +16,7 @@
     // a list of the video elements, for later manipulation
     var vidElements = [];
 
-    // get the configuration
+    // get the configuration data for this wall
     var xmlhttp = new XMLHttpRequest();
     var configFile = "setup.json";
     xmlhttp.onreadystatechange = function() {
@@ -28,33 +28,48 @@
     xmlhttp.open("GET", configFile, true);
     xmlhttp.send();
 
+
     // take the config data and layout the videos
     function runLayout(wall){
-        console.log(wall);
         var layoutId = parseInt(wall.layout);
         var layout = layouts[layoutId];
         for(var i = 0; i < wall.videos.length; i++){
+
+            // get path to content
             var path = wall.videos[i].path;
-            var start = wall.videos[i].start;
+
+            // encode start and end times in url
+            path += encodeTimes(wall.videos[i].start, wall.videos[i].end);
+
+            // get placement and crop information
             var postion = parseInt(wall.videos[i].position);
             var placement = layout[postion-1];
-            console.log(placement);
-            var crop;
-            try{
-                crop = wall.videos[i].crop;
-            }
-            catch(e){}
-            console.log(path);
-            console.log(placement);
+            var crop = wall.videos[i].crop;
+
+            // create and add to mosaic
             var t = addVideoStream("vid" + i, path, placement, crop);
             vidElements.push(t);
         }
     }
 
 
-    // Add a video sream to the montage
+    // creates a snippet to add to url encoding start and end times
+    // for video
+    function encodeTimes(start, end){
+        if(start == null){
+            start = 0;
+        }
+        var snippet = "#t=" + start;
+        if(end != null){
+            snippet += "," + end;
+        }
+        return snippet;
+    }
+
+
+    // Add a video stream to the montage
     // at specified postion with (optional) cropping
-    function addVideoStream(vidid, vid, pos, crop){
+    function addVideoStream(vidid, url, pos, crop){
 
         var vidEl = document.createElement('video');
         vidEl.width = pos.width * width;
@@ -77,7 +92,7 @@
         }
 
         // vidEl.controls = true;
-        vidEl.src = vid;
+        vidEl.src = url;
         vidEl.autoplay = true;
 
         var container = document.getElementById('montage');
