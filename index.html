@@ -3,6 +3,7 @@
     <head>
         <title>Wall of Moments</title>
         <link rel="stylesheet" href="style.css">
+        <script src="layouts.js"></script>
     </head>
 
     <body>
@@ -26,18 +27,6 @@
     };
     xmlhttp.open("GET", configFile, true);
     xmlhttp.send();
-
-
-    // layout definition - move to anther json?
-    var layouts = [
-        [
-            { left: 0, top: 0, width: 0.5, height: 0.5 },
-            { left: 0.5, top: 0, width: 0.5, height: 0.5 },
-            { left: 0, top: 0.5, width: 0.5, height: 0.5 },
-            { left: 0.5, top: 0.5, width: 0.5, height: 0.5 }
-        ]
-    ];
-
 
     // take the config data and layout the videos
     function runLayout(wall){
