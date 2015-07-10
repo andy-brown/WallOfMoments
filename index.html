@@ -12,58 +12,79 @@
     // define size of montage area
     var width = 960, height = 540;
 
-    // define source material
-    var vidPath = 'videos/';
-    var vids = ['autumnwatch.mp4', 'philharmonic.webm',
-        '4-News-ch-greece-2.webm', 'autumnwatch.mp4'];
-
-    // work out positions
-    var x = [0, 0.5, 0, 0.5];
-    var y = [0,0,0.5,0.5];
-    var cropA = {width:width/4, height:height/4, left:width/4, top:height/4};
-    var cropB = {width:(3*width)/8, height:(3*height/8), left:width/8, top:height/8};
-    var crops = [cropB, null, cropA, null];
-    var placements = [];
-    for(var i=0; i<vids.length; i++){
-        var pos = {
-            width:width/2,
-            height:height/2,
-            left: width*x[i],
-            top: height*y[i]
-        }
-        placements.push(pos);
-    }
-
-    // add videos
+    // a list of the video elements, for later manipulation
     var vidElements = [];
-    for(var i=0; i<vids.length; i++){
-        var t = addVideoStream("vid" + i, vidPath + vids[i], placements[i], crops[i]);
-        vidElements.push(t);
-        // t.play();
+
+    // get the configuration
+    var xmlhttp = new XMLHttpRequest();
+    var configFile = "setup.json";
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myArr = JSON.parse(xmlhttp.responseText);
+            runLayout(myArr);
+        }
+    };
+    xmlhttp.open("GET", configFile, true);
+    xmlhttp.send();
+
+
+    // layout definition - move to anther json?
+    var layouts = [
+        [
+            { left: 0, top: 0, width: 0.5, height: 0.5 },
+            { left: 0.5, top: 0, width: 0.5, height: 0.5 },
+            { left: 0, top: 0.5, width: 0.5, height: 0.5 },
+            { left: 0.5, top: 0.5, width: 0.5, height: 0.5 }
+        ]
+    ];
+
+
+    // take the config data and layout the videos
+    function runLayout(wall){
+        console.log(wall);
+        var layoutId = parseInt(wall.layout);
+        var layout = layouts[layoutId];
+        for(var i = 0; i < wall.videos.length; i++){
+            var path = wall.videos[i].path;
+            var start = wall.videos[i].start;
+            var postion = parseInt(wall.videos[i].position);
+            var placement = layout[postion-1];
+            console.log(placement);
+            var crop;
+            try{
+                crop = wall.videos[i].crop;
+            }
+            catch(e){}
+            console.log(path);
+            console.log(placement);
+            var t = addVideoStream("vid" + i, path, placement, crop);
+            vidElements.push(t);
+        }
     }
+
 
     // Add a video sream to the montage
     // at specified postion with (optional) cropping
     function addVideoStream(vidid, vid, pos, crop){
 
         var vidEl = document.createElement('video');
-        vidEl.width = pos.width;
-        vidEl.height = pos.height;
+        vidEl.width = pos.width * width;
+        vidEl.height = pos.height * height;
         vidEl.id = vidid;
 
         var cropEl = document.createElement('div');
         cropEl.className = 'crop';
-        cropEl.style.top = pos.top + "px";
-        cropEl.style.left = pos.left + "px";
+        cropEl.style.top = (pos.top * height) + "px";
+        cropEl.style.left = (pos.left * width) + "px";
 
         cropEl.appendChild(vidEl);
         if (crop != null){
-            cropEl.style.width = pos.width;
-            cropEl.style.height = pos.height;
-            vidEl.style.marginLeft = -crop.left + "px";
-            vidEl.style.marginTop = -crop.top + "px";
-            vidEl.width = pos.width * (pos.width/crop.width);
-            vidEl.height = pos.height * (pos.height/crop.height);
+            cropEl.style.width = (pos.width * width);
+            cropEl.style.height = (pos.height * height);
+            vidEl.style.marginLeft = -(crop.left * width) + "px";
+            vidEl.style.marginTop = -(crop.top * height) + "px";
+            vidEl.width = ((pos.width/crop.width)) * width;
+            vidEl.height = ((pos.height/crop.height)) * height;
         }
 
         // vidEl.controls = true;
