@@ -20,16 +20,16 @@
     // work out positions
     var x = [0, 0.5, 0, 0.5];
     var y = [0,0,0.5,0.5];
-    var cropA = {w:width/4, h:height/4, x:width/4, y:height/4};
-    var cropB = {w:(3*width)/8, h:(3*height/8), x:width/8, y:height/8};
+    var cropA = {width:width/4, height:height/4, left:width/4, top:height/4};
+    var cropB = {width:(3*width)/8, height:(3*height/8), left:width/8, top:height/8};
     var crops = [cropB, null, cropA, null];
     var placements = [];
     for(var i=0; i<vids.length; i++){
         var pos = {
-            w:width/2,
-            h:height/2,
-            x: width*x[i],
-            y: height*y[i]
+            width:width/2,
+            height:height/2,
+            left: width*x[i],
+            top: height*y[i]
         }
         placements.push(pos);
     }
@@ -47,23 +47,23 @@
     function addVideoStream(vidid, vid, pos, crop){
 
         var vidEl = document.createElement('video');
-        vidEl.width = pos.w;
-        vidEl.height = pos.h;
+        vidEl.width = pos.width;
+        vidEl.height = pos.height;
         vidEl.id = vidid;
 
         var cropEl = document.createElement('div');
         cropEl.className = 'crop';
-        cropEl.style.top = pos.y + "px";
-        cropEl.style.left = pos.x + "px";
+        cropEl.style.top = pos.top + "px";
+        cropEl.style.left = pos.left + "px";
 
         cropEl.appendChild(vidEl);
         if (crop != null){
-            cropEl.style.width = pos.w;
-            cropEl.style.height = pos.h;
-            vidEl.style.marginLeft = -crop.x + "px";
-            vidEl.style.marginTop = -crop.y + "px";
-            vidEl.width = pos.w * (pos.w/crop.w);
-            vidEl.height = pos.h * (pos.h/crop.h);
+            cropEl.style.width = pos.width;
+            cropEl.style.height = pos.height;
+            vidEl.style.marginLeft = -crop.left + "px";
+            vidEl.style.marginTop = -crop.top + "px";
+            vidEl.width = pos.width * (pos.width/crop.width);
+            vidEl.height = pos.height * (pos.height/crop.height);
         }
 
         // vidEl.controls = true;
