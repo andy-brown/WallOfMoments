@@ -3,7 +3,10 @@ var mon = document.getElementById("montage");
 var width = mon.clientWidth, height = mon.clientHeight;
 
 // a list of the video elements, for later manipulation
-var vidElements = [];
+var vidStreams = [];
+var playLists = [];
+
+// need playlist of objects for each stream...
 
 // get the configuration data for this wall
 var xmlhttp = new XMLHttpRequest();
@@ -11,33 +14,58 @@ var configFile = "setup.json";
 xmlhttp.onreadystatechange = function() {
 	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		var myArr = JSON.parse(xmlhttp.responseText);
-		runLayout(myArr);
+		// runLayout(myArr);
+		createPlaylists(myArr);
+		start();
 	}
 };
 xmlhttp.open("GET", configFile, true);
 xmlhttp.send();
 
 
-// take the config data and layout the videos
-function runLayout(wall){
+// take the config data and layout the streams
+function createPlaylists(wall){
 	var layoutId = parseInt(wall.layout);
 	var layout = layouts[layoutId];
-	for(var i = 0; i < wall.videos.length; i++){
 
+	for(var i = 0; i < layout.length; i++){
+		playLists.push([]);
+	}
+
+	for(var i = 0; i < layout.length; i++){
 		// get path to content
-		var path = wall.videos[i].path;
+		var position = parseInt(wall.positions[i].position);
+		var videos = wall.positions[i].videos;
 
-		// encode start and end times in url
-		path += encodeTimes(wall.videos[i].start, wall.videos[i].end);
+		for (var j = 0; j < videos.length; j++){
 
-		// get placement and crop information
-		var postion = parseInt(wall.videos[i].position);
-		var placement = layout[postion-1];
-		var crop = wall.videos[i].crop;
+			var path = videos[j].path;
 
-		// create and add to mosaic
-		var t = addVideoStream("vid" + i, path, placement, crop);
-		vidElements.push(t);
+			// encode start and end times in url
+			path += encodeTimes(videos[j].start, videos[j].end);
+
+			// get placement and crop information
+			var placement = layout[position-1];
+			var crop = videos[j].crop;
+
+			var vidObj = new VideoSegment("vid" + i, path, placement, crop);
+			playLists[i].push(vidObj);
+
+		}
+	}
+}
+
+// take the first item from each playlist and create
+// the mosaic
+function start(){
+	for (var i =0; i < playLists.length; i++){
+		// remove first item
+		var vidObj = playLists[i].shift();
+		var t = addVideoStream(vidObj);
+		vidStreams.push(t);
+
+		// add onEnd listener, to load next obj for stream
+
 	}
 }
 
@@ -57,36 +85,56 @@ function encodeTimes(start, end){
 
 
 // Add a video stream to the montage
-// at specified postion with (optional) cropping
-function addVideoStream(vidid, url, pos, crop){
+function addVideoStream(vidObj){
+	var pos = vidObj.placement;
+	var crop = vidObj.crop;
 
 	var vidEl = document.createElement('video');
 	vidEl.width = pos.width * width;
 	vidEl.height = pos.height * height;
-	vidEl.id = vidid;
+	vidEl.id = vidObj.vid;
+	// vidEl.controls = true;
+	vidEl.src = vidObj.url;
+	vidEl.autoplay = true;
 
+	// create container that can do cropping
 	var cropEl = document.createElement('div');
 	cropEl.className = 'crop';
 	cropEl.style.top = (pos.top * height) + "px";
 	cropEl.style.left = (pos.left * width) + "px";
+	cropEl.style.width = (pos.width * width) + "px";
+	cropEl.style.height = (pos.height * height) + "px";
 
-	cropEl.appendChild(vidEl);
-	if (crop != null){
-		cropEl.style.width = (pos.width * width);
-		cropEl.style.height = (pos.height * height);
-		vidEl.style.marginLeft = -(crop.left * width) + "px";
-		vidEl.style.marginTop = -(crop.top * height) + "px";
-		vidEl.width = ((pos.width/crop.width)) * width;
-		vidEl.height = ((pos.height/crop.height)) * height;
-	}
-
-	// vidEl.controls = true;
-	vidEl.src = url;
-	vidEl.autoplay = true;
+	cropVideoContainer(vidEl, pos, crop);
 
 	var container = document.getElementById('montage');
 	container.appendChild(cropEl);
+	cropEl.appendChild(vidEl);
+
 	return vidEl;
+}
+
+// style the stream container to crop video
+function cropVideoContainer(vidEl, pos, crop){
+	if(crop == null){
+		return;
+	}
+	vidEl.style.marginLeft = -(crop.left * width) + "px";
+	vidEl.style.marginTop = -(crop.top * height) + "px";
+	vidEl.width = ((pos.width/crop.width)) * width;
+	vidEl.height = ((pos.height/crop.height)) * height;
+}
+
+
+// replace a stream
+function replaceVideoStream(streamNo, vidObj){
+	var vidEl = vidStreams[streamNo];
+	// change src
+	vidEl.src = vidObj.url;
+	// change crop
+	cropVideoContainer(vidEl, vidObj.placement, vidObj.crop)
+	// play
+	vidEl.play();
 }
 
 
@@ -94,21 +142,30 @@ function addVideoStream(vidid, url, pos, crop){
 play, pause, skip, replace individual streams
 ****/
 function play(streamNo){
-	var videl = vidElements[streamNo];
+	var videl = vidStreams[streamNo];
 	videl.play();
 }
 
 function pause(streamNo){
-	var videl = vidElements[streamNo];
+	var videl = vidStreams[streamNo];
 	videl.pause();
 }
 
 function skipTo(streamNo, time){
-	var videl = vidElements[streamNo];
+	var videl = vidStreams[streamNo];
 	videl.currentTime = time;
 }
 
 function replace(streamNo, path){
-	var videl = vidElements[streamNo];
+	var videl = vidStreams[streamNo];
 	videl.src = path;
 }
+
+// an object representing a segment of the montage for
+// a single video
+var VideoSegment = function(vid, url, placement, crop){
+	this.vid = vid;
+	this.url = url;
+	this.placement = placement;
+	this.crop = crop;
+};
