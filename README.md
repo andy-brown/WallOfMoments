@@ -5,3 +5,6 @@ Can be served through a standard Web server, or using the Nodejs server included
 > node server.js
 
 Nodejs server runs on port 3003: visit http://localhost:3003/
+
+Note that the current file requires a videos/ folder which is populated with
+some content (not in repo).
