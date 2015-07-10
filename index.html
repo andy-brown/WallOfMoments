@@ -10,8 +10,9 @@
         <div id='montage'></div>
 
 <script>
-    // define size of montage area
-    var width = 960, height = 540;
+    // get size of montage area from css
+    var mon = document.getElementById("montage");
+    var width = mon.clientWidth, height = mon.clientHeight;
 
     // a list of the video elements, for later manipulation
     var vidElements = [];
