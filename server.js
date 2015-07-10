@@ -34,6 +34,7 @@ function handler (req, response) {
         var contentType = 'text/html';
         switch (extname) {
 			case '.js':
+            case '.json':
 				contentType = 'text/javascript';
 				break;
 			case '.css':
