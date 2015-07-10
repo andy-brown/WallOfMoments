@@ -1,38 +1,56 @@
 {
 	"layout": 1,
-	"videos":
-	[
+	"positions":[
 		{
-			"path": "/videos/autumnwatch.mp4",
-			"end": 200,
 			"position": 1,
-			"crop":{
-				"top": 0.25,
-				"left": 0.25,
-				"width": 0.5,
-				"height": 0.5
+			"videos": [
+			{
+				"path": "/videos/autumnwatch.mp4",
+				"end": 200,
+				"crop":{
+					"top": 0.25,
+					"left": 0.25,
+					"width": 0.5,
+					"height": 0.5
+				}
+			},
+			{
+				"path": "/videos/philharmonic.webm",
+				"start": 0
 			}
+			]
 		},
 		{
-			"path": "/videos/philharmonic.webm",
-			"start": 0,
-			"position": 2
+			"position": 2,
+			"videos": [
+			{
+				"path": "/videos/philharmonic.webm",
+				"start": 0
+			}
+			]
 		},
 		{
-			"path": "/videos/4-News-ch-greece-2.webm",
-			"start": 30,
 			"position": 3,
-			"crop":{
-				"top": 0.125,
-				"left": 0.125,
-				"width": 0.75,
-				"height": 0.75
+			"videos": [
+			{
+				"path": "/videos/greece.webm",
+				"start": 25,
+				"crop":{
+					"top": 0.125,
+					"left": 0.125,
+					"width": 0.75,
+					"height": 0.75
+				}
 			}
+			]
 		},
 		{
-			"path": "/videos/autumnwatch.mp4",
-			"start": 500,
-			"position": 4
+			"position": 4,
+			"videos": [
+			{
+				"path": "/videos/autumnwatch.mp4"
+			}
+			]
 		}
 	]
 }
