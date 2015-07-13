@@ -63,17 +63,17 @@ function start(){
 		var vidObj = playLists[i].shift();
 		var t = addVideoStream(vidObj);
 		vidStreams.push(t);
-
-		// add onEnd listener, to load next obj for stream
-		t.addEventListener("pause", function(ev){
-			var started = nextVid(ev.target.id);
-		});
-		// using encoded urls to clip time pauses rather than ends...
-		t.addEventListener("ended", function(ev){
-			nextVid(ev.target.id);
-		});
-
+		addNextVideoListener(t);
 	}
+}
+
+// add listener to do next
+function addNextVideoListener(stream){
+	// add pause listener, to load next obj for stream
+	// (end doesn't fire when video reaches end of url encoded slice)
+	stream.addEventListener("pause", function(ev){
+		var started = nextVid(ev.target.id);
+	});
 }
 
 // play the next video in the stream
@@ -83,13 +83,16 @@ function nextVid(streamId){
 		if(list.length > 0){
 			if(streamId === list[0].vid){
 				var nextV = list.shift();
+				console.log("moving to next video in stream " + streamId);
 				replaceVideoStream(streamId, nextV);
+				// add listener for next
+				var stream = document.getElementById(streamId);
 				return true;
 			}
 		}
 	}
 	// nothing to replace - so one stream has stopped
-	console.log("stop?");
+	console.log("stream " + streamId + " finished");
 	return false; // no stream found
 }
 
@@ -142,10 +145,14 @@ function cropVideoContainer(vidEl, pos, crop){
 	if(crop == null){
 		crop = {left:0, top:0, width: 1, height: 1 };
 	}
-	vidEl.style.marginLeft = -(crop.left * width) + "px";
-	vidEl.style.marginTop = -(crop.top * height) + "px";
-	vidEl.width = ((pos.width/crop.width)) * width;
-	vidEl.height = ((pos.height/crop.height)) * height;
+	// scale to zoom in (and thus crop)
+	var scaledWidth = (pos.width * width)/crop.width;
+	var scaledHeight = (pos.height * height)/crop.height;
+	vidEl.width = scaledWidth;
+	vidEl.height = scaledHeight;
+	// shift so correct area is visible
+	vidEl.style.marginLeft = -(crop.left * scaledWidth) + "px";
+	vidEl.style.marginTop = -(crop.top * scaledHeight) + "px";
 }
 
 
