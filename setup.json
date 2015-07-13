@@ -6,7 +6,7 @@
 			"videos": [
 			{
 				"path": "/videos/autumnwatch.mp4",
-				"end": 200,
+				"end": 5,
 				"crop":{
 					"top": 0.25,
 					"left": 0.25,
@@ -25,7 +25,7 @@
 			"videos": [
 			{
 				"path": "/videos/philharmonic.webm",
-				"start": 0
+				"end": 10
 			}
 			]
 		},
