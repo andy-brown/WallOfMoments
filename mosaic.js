@@ -123,8 +123,6 @@ function addVideoStream(vidObj){
 	var crop = vidObj.crop;
 
 	var vidEl = document.createElement('video');
-	vidEl.width = pos.width * width;
-	vidEl.height = pos.height * height;
 	vidEl.id = vidObj.vid;
 	// vidEl.controls = true;
 	vidEl.src = vidObj.url;
@@ -155,8 +153,8 @@ function cropVideoContainer(vidEl, pos, crop){
 	// scale to zoom in (and thus crop)
 	var scaledWidth = (pos.width * width)/crop.width;
 	var scaledHeight = (pos.height * height)/crop.height;
-	vidEl.width = scaledWidth;
-	vidEl.height = scaledHeight;
+	vidEl.style.width = scaledWidth + "px";
+	vidEl.style.height = scaledHeight + "px";
 	// shift so correct area is visible
 	vidEl.style.marginLeft = -(crop.left * scaledWidth) + "px";
 	vidEl.style.marginTop = -(crop.top * scaledHeight) + "px";

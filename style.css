@@ -10,8 +10,8 @@ body
     background-color: black;
     top: 0;
     left: 0;
-    width: 960px;
-    height:540px;
+    width: 1280px; // 960px;
+    height:720px; // 540px;
     overflow: hidden;
 }
 
