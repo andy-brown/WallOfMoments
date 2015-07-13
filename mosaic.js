@@ -10,7 +10,14 @@ var playLists = [];
 
 // get the configuration data for this wall
 var xmlhttp = new XMLHttpRequest();
+
+// optionally load config file from GET parameter
 var configFile = "setup.json";
+var cf = get('config');
+if(cf != null){
+	configFile = cf + ".json";
+}
+
 xmlhttp.onreadystatechange = function() {
 	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		var myArr = JSON.parse(xmlhttp.responseText);
@@ -203,3 +210,9 @@ var VideoSegment = function(vid, url, placement, crop){
 	this.placement = placement;
 	this.crop = crop;
 };
+
+// retrieve a GET parameter
+function get(name){
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+      return decodeURIComponent(name[1]);
+}
