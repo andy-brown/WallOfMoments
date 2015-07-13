@@ -65,10 +65,33 @@ function start(){
 		vidStreams.push(t);
 
 		// add onEnd listener, to load next obj for stream
+		t.addEventListener("pause", function(ev){
+			var started = nextVid(ev.target.id);
+		});
+		// using encoded urls to clip time pauses rather than ends...
+		t.addEventListener("ended", function(ev){
+			nextVid(ev.target.id);
+		});
 
 	}
 }
 
+// play the next video in the stream
+function nextVid(streamId){
+	for(var i = 0; i < playLists.length; i++){
+		var list = playLists[i];
+		if(list.length > 0){
+			if(streamId === list[0].vid){
+				var nextV = list.shift();
+				replaceVideoStream(streamId, nextV);
+				return true;
+			}
+		}
+	}
+	// nothing to replace - so one stream has stopped
+	console.log("stop?");
+	return false; // no stream found
+}
 
 // creates a snippet to add to url encoding start and end times
 // for video
@@ -117,7 +140,7 @@ function addVideoStream(vidObj){
 // style the stream container to crop video
 function cropVideoContainer(vidEl, pos, crop){
 	if(crop == null){
-		return;
+		crop = {left:0, top:0, width: 1, height: 1 };
 	}
 	vidEl.style.marginLeft = -(crop.left * width) + "px";
 	vidEl.style.marginTop = -(crop.top * height) + "px";
@@ -127,14 +150,18 @@ function cropVideoContainer(vidEl, pos, crop){
 
 
 // replace a stream
-function replaceVideoStream(streamNo, vidObj){
-	var vidEl = vidStreams[streamNo];
-	// change src
-	vidEl.src = vidObj.url;
-	// change crop
-	cropVideoContainer(vidEl, vidObj.placement, vidObj.crop)
-	// play
-	vidEl.play();
+function replaceVideoStream(streamId, vidObj){
+	for(var i = 0; i < vidStreams.length; i++){
+		var vidEl = vidStreams[i];
+		if(vidEl.id === streamId){
+			// change src
+			vidEl.src = vidObj.url;
+			// change crop
+			cropVideoContainer(vidEl, vidObj.placement, vidObj.crop)
+			// play
+			vidEl.play();
+		}
+	}
 }
 
 
