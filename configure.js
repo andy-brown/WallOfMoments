@@ -44,7 +44,7 @@ function addClipAdder(layoutPosition){
 	clipName.id = 'clip' + layoutPosition;
 	clipName.name = layoutPosition;
 	newClip.addEventListener("mouseover", function(ev){
-		console.log(ev.target.name);
+		// console.log(ev.target.name);
 		var vId = parseInt(ev.target.name)-1;
 		var vidEl = document.getElementById('crop' + vId);
 		if(vidEl){
@@ -52,7 +52,7 @@ function addClipAdder(layoutPosition){
 		}
 	});
 	clipName.onmouseout = function(ev){
-		console.log(ev.target.name);
+		// console.log(ev.target.name);
 		var vId = parseInt(ev.target.name)-1;
 		var vidEl = document.getElementById('crop' + vId);
 		if(vidEl){
@@ -112,11 +112,33 @@ function addClip(locationId, url, start, stop){
 				"start": start,
 				"end": stop };
 	newConfig.positions[locationId].push(c);
+
 	var listEl = document.getElementById('vidList' + locationId);
 	var listItem = document.createElement('li');
+	listItem.id = locationId + "-" + newConfig.positions[locationId].length;
 	var timeSnippet = encodeTimes(start, stop);
 	listItem.appendChild(document.createTextNode(url + " " + timeSnippet));
+
 	// remove button...
+	var remBut = document.createElement('button');
+	remBut.appendChild(document.createTextNode("remove"));
+	remBut.id = 'remove-' + listItem.id;
+	remBut.className = 'remove';
+	remBut.addEventListener('click', function(ev){
+		console.log(ev.target.id);
+		var re = /remove-([0-9]*)-([0-9]*)/;
+		var matches = re.exec(ev.target.id);
+		var loc = matches[1];
+		var pos = matches[2];
+		newConfig.positions[loc].splice(pos-1, 1);
+		var listEl = document.getElementById('vidList' + loc);
+		listEl.removeChild(document.getElementById(loc + "-" + pos));
+		console.log(newConfig);
+		// emptyElement('clipSelector');
+		// populateConfig(newConfig);
+	});
+	listItem.appendChild(remBut);
+
 	listEl.appendChild(listItem);
 
 }
@@ -172,7 +194,7 @@ function populateConfig(conf){
 // apply the config and run it
 function apply(){
 	emptyElement('montage');
-	console.log(newConfig);
+	playLists = {};//  = null;
 	config = newConfig;
 	start(false);
 }
