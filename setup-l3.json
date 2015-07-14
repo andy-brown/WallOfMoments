@@ -1,9 +1,7 @@
 {
 	"layout": 3,
-	"positions":[
-		{
-			"position": 1,
-			"videos": [
+	"positions": {
+			"1": [
 			{
 				"path": "/videos/autumnwatch.mp4",
 				"end": 25,
@@ -29,37 +27,25 @@
 					"height": 0.75
 				}
 			}
-			]
-		},
-		{
-			"position": 2,
-			"videos": [
+		],
+			"2": [
 			{
 				"path": "/videos/philharmonic.webm",
 				"end": 30
 			}
-			]
-		},
-		{
-			"position": 4,
-			"videos": [
+		],
+			"4": [
 			{
 				"path": "/videos/greece.webm",
 				"start": 25
 			}
-			]
-		},
-		{
-			"position": 3,
-			"videos": [
+		],
+			"3": [
 			{
 				"path": "/videos/autumnwatch.mp4"
 			}
-			]
-		},
-		{
-			"position": 6,
-			"videos": [
+		],
+			"6": [
 			{
 				"path": "/videos/greece.webm",
 				"end": 30,
@@ -70,16 +56,12 @@
 					"height": 0.9
 				}
 			}
-			]
-		},
-		{
-			"position": 5,
-			"videos": [
+		],
+			"5": [
 			{
 				"path": "/videos/philharmonic.webm",
 				"end": 30
 			}
 			]
 		}
-	]
 }

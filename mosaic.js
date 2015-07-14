@@ -33,7 +33,8 @@ xmlhttp.send();
 
 // set up layout, generate play lists, populate layout and play
 function start(){
-	var streams = createLayout();
+	var layoutId = parseInt(config.layout);
+	var streams = createLayout(layoutId);
 	createplayLists(streams);
 	populateLayout();
 }
@@ -49,13 +50,9 @@ function createplayLists(streams){
 		var vId = streams[i];
 		playLists[vId] = {list: [], location: i};
 
-		// get path to content
-		if(config.positions[i]){ // maybe not all populated?
-			var position = parseInt(config.positions[i].position);
-			var videos = config.positions[i].videos;
-
-			for (var j = 0; j < videos.length; j++){
-
+		if(config.positions[i+1]){
+			var videos = config.positions[i+1];
+			for(var j = 0; j < videos.length; j++){
 				// encode start and end times in url
 				var path = videos[j].path;
 				path += encodeTimes(videos[j].start, videos[j].end);
@@ -66,18 +63,17 @@ function createplayLists(streams){
 				// create object and add to playlist
 				var vidObj = new VideoSegment(path, crop);
 				playLists[vId].list.push(vidObj);
-
 			}
 		}
 	}
+	console.log(playLists);
 }
 
 
 // create the mosaic:
 // build containers for the videos
 // but video elements are empty
-function createLayout(){
-	var layoutId = parseInt(config.layout);
+function createLayout(layoutId){
 	layout = layouts[layoutId];
 	var streams = [];
 
@@ -131,6 +127,8 @@ function populateLayout(){
 		addNextVideoListener(vidEl);
 
 	}
+	var montage = document.getElementById('montage');
+	montage.style.backgroundColor = "black";
 }
 
 
