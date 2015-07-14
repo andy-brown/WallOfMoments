@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Wall of Moments</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">        <title>Wall of Moments</title>
         <link rel="stylesheet" href="style.css">
         <script src="layouts.js"></script>
     </head>
@@ -9,5 +9,16 @@
     <body>
         <div id='montage'></div>
         <script src="mosaic.js"></script>
+        <div id='after'>
+            <div id='layoutSelector'></div>
+            <div id='clipSelector'></div>
+            <!-- div id='config'>Hello</div -->
+            <div id='apply'>
+                <button onclick='javascript:load();'>Load</button>
+                <button onclick='javascript:apply();'>Run</button>
+                <button onclick='javascript:save();'>Save</button>
+            </div>
+        </div>
+        <script src="configure.js"></script>
     </body>
 </html>
