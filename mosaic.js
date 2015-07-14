@@ -38,6 +38,7 @@ function start(){
 	populateLayout();
 }
 
+
 // take the config data and layout the streams
 // takes a list of ids for the elements in each location
 function createplayLists(streams){
@@ -69,7 +70,10 @@ function createplayLists(streams){
 	}
 }
 
-// create containers for the videos
+
+// create the mosaic:
+// build containers for the videos
+// but video elements are empty
 function createLayout(){
 	var layoutId = parseInt(config.layout);
 	layout = layouts[layoutId];
@@ -77,7 +81,6 @@ function createLayout(){
 
 	for (var i =0; i < layout.length; i++){
 		var stream = addStreamToLayout(i);
-		addNextVideoListener(stream);
 		streams.push(stream.id);
 	}
 
@@ -85,9 +88,10 @@ function createLayout(){
 	return streams;
 }
 
+
 // add a stream to the layout
 // creates an element to hold the video, and one to crop it
-// and adds these to the layout
+// and adds these to the mosaic
 function addStreamToLayout(streamId){
 	var vidEl = document.createElement('video');
 	vidEl.id = "vid" + streamId;
@@ -113,24 +117,33 @@ function addStreamToLayout(streamId){
 
 
 // populate the layout from the playLists
+// and add listeners so streams can go through lists
 function populateLayout(){
 	for (var k in playLists){
 		var list = playLists[k].list;
 		var vidObj = list.shift();
 		setVideoStream(k, vidObj);
+
+		// add listener
+		var vidEl = document.getElementById(k);
+		addNextVideoListener(vidEl);
+
 	}
 }
 
-// add listener to do next
+
+// add listener so that stream moves on to next in playList when current
+// video ends
 function addNextVideoListener(stream){
 	// add pause listener, to load next obj for stream
 	// (end doesn't fire when video reaches end of url encoded slice)
 	stream.addEventListener("pause", function(ev){
-		var started = nextVid(ev.target.id);
+		nextVid(ev.target.id);
 	});
 }
 
-// play the next video in the stream
+
+// play the next video in the playList for this stream
 function nextVid(streamId){
 	var list = playLists[streamId].list;
 	if(list.length > 0){
@@ -144,6 +157,7 @@ function nextVid(streamId){
 	return false; // no stream found
 }
 
+
 // creates a snippet to add to url encoding start and end times
 // for video
 function encodeTimes(start, end){
@@ -156,6 +170,7 @@ function encodeTimes(start, end){
 	}
 	return snippet;
 }
+
 
 // style the stream container to crop video
 function cropVideoContainer(vidEl, streamId, crop){
@@ -177,7 +192,7 @@ function cropVideoContainer(vidEl, streamId, crop){
 }
 
 
-// replace a stream
+// replace the video in a stream with the given VideoSegment object
 function setVideoStream(streamId, vidObj){
 	var vidEl = document.getElementById(streamId);
 	// change src
@@ -195,6 +210,7 @@ var VideoSegment = function(url, crop){
 	this.url = url;
 	this.crop = crop;
 };
+
 
 // retrieve a GET parameter
 function get(name){
