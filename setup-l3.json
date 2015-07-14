@@ -62,7 +62,13 @@
 			"videos": [
 			{
 				"path": "/videos/greece.webm",
-				"end": 30
+				"end": 30,
+				"crop":{
+					"top": 0.1,
+					"left": 0.1,
+					"width": 0.9,
+					"height": 0.9
+				}
 			}
 			]
 		},
