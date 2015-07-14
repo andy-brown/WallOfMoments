@@ -16,8 +16,34 @@ body
 }
 
 .crop{
-    background-color: white;
+    // background-color: none;
     border: 1px solid black;
     position:fixed;
     overflow: hidden;
+}
+
+.highlight{
+    background-color: #ffdddd;
+}
+
+#after{
+    visibility: hidden;
+    position:fixed;
+    top:580px;
+    left:1em;
+}
+
+#apply{
+    padding-top: 1em;
+}
+
+.selectClip{
+    padding-left: 1em;
+    padding-right: 1em;
+    margin-top: 1em;
+    border-top: 1px solid #dddddd;
+}
+
+.selectClip input{
+    margin-left: 0.5em;
 }
