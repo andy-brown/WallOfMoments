@@ -6,6 +6,7 @@ var width = mon.clientWidth, height = mon.clientHeight;
 var config;
 var playLists = {};
 var layout;
+var showEdit = true; // false;
 
 // need playlist of objects for each stream...
 
@@ -24,7 +25,7 @@ xmlhttp.onreadystatechange = function() {
 	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 		var myArr = JSON.parse(xmlhttp.responseText);
 		config = myArr;
-		start();
+		start(showEdit);
 	}
 };
 xmlhttp.open("GET", configFile, true);
@@ -32,8 +33,14 @@ xmlhttp.send();
 
 
 // set up layout, generate play lists, populate layout and play
-function start(){
+function start(edit){
 	var layoutId = parseInt(config.layout);
+	if(edit){
+		addLayoutSelector(config.layout);
+		updateLayout(config.layout);
+		populateConfig(config);
+		document.getElementById('after').style.visibility = "visible";
+	}
 	var streams = createLayout(layoutId);
 	createplayLists(streams);
 	populateLayout();
@@ -100,6 +107,7 @@ function addStreamToLayout(streamId){
 	// create container that can do cropping
 	var cropEl = document.createElement('div');
 	cropEl.className = 'crop';
+	cropEl.id = 'crop' + streamId;
 	cropEl.style.top = (pos.top * height) + "px";
 	cropEl.style.left = (pos.left * width) + "px";
 	cropEl.style.width = (pos.width * width) + "px";
@@ -128,7 +136,7 @@ function populateLayout(){
 
 	}
 	var montage = document.getElementById('montage');
-	montage.style.backgroundColor = "black";
+	// montage.style.backgroundColor = "black";
 }
 
 
@@ -145,6 +153,7 @@ function addNextVideoListener(stream){
 
 // play the next video in the playList for this stream
 function nextVid(streamId){
+	if(!playLists[streamId]){ return; } // may have gone...
 	var list = playLists[streamId].list;
 	if(list.length > 0){
 		var nextV = list.shift();
@@ -161,7 +170,10 @@ function nextVid(streamId){
 // creates a snippet to add to url encoding start and end times
 // for video
 function encodeTimes(start, end){
-	if(start == null){
+	if(start == null && end == null){
+		return "";
+	}
+	else if(start == null){
 		start = 0;
 	}
 	var snippet = "#t=" + start;
@@ -195,7 +207,7 @@ function cropVideoContainer(vidEl, streamId, crop){
 // replace the video in a stream with the given VideoSegment object
 function setVideoStream(streamId, vidObj){
 	var vidEl = document.getElementById(streamId);
-	if(vidObj){ // make sure we have an object
+	if(vidObj != null && vidEl != null){ // make sure we have an object
 		// change src
 		vidEl.src = vidObj.url;
 		// change crop
