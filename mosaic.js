@@ -50,22 +50,24 @@ function createplayLists(streams){
 		playLists[vId] = {list: [], location: i};
 
 		// get path to content
-		var position = parseInt(config.positions[i].position);
-		var videos = config.positions[i].videos;
+		if(config.positions[i]){ // maybe not all populated?
+			var position = parseInt(config.positions[i].position);
+			var videos = config.positions[i].videos;
 
-		for (var j = 0; j < videos.length; j++){
+			for (var j = 0; j < videos.length; j++){
 
-			// encode start and end times in url
-			var path = videos[j].path;
-			path += encodeTimes(videos[j].start, videos[j].end);
+				// encode start and end times in url
+				var path = videos[j].path;
+				path += encodeTimes(videos[j].start, videos[j].end);
 
-			// get placement and crop information
-			var crop = videos[j].crop;
+				// get placement and crop information
+				var crop = videos[j].crop;
 
-			// create object and add to playlist
-			var vidObj = new VideoSegment(path, crop);
-			playLists[vId].list.push(vidObj);
+				// create object and add to playlist
+				var vidObj = new VideoSegment(path, crop);
+				playLists[vId].list.push(vidObj);
 
+			}
 		}
 	}
 }
@@ -195,12 +197,14 @@ function cropVideoContainer(vidEl, streamId, crop){
 // replace the video in a stream with the given VideoSegment object
 function setVideoStream(streamId, vidObj){
 	var vidEl = document.getElementById(streamId);
-	// change src
-	vidEl.src = vidObj.url;
-	// change crop
-	cropVideoContainer(vidEl, streamId, vidObj.crop)
-	// play
-	vidEl.play();
+	if(vidObj){ // make sure we have an object
+		// change src
+		vidEl.src = vidObj.url;
+		// change crop
+		cropVideoContainer(vidEl, streamId, vidObj.crop)
+		// play
+		vidEl.play();
+	}
 }
 
 
