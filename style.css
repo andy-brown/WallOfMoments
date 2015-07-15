@@ -5,7 +5,7 @@ body
 }
 #montage
 {
-    position: fixed;
+    position: absolute;
     background-color: white;
     top: 0;
     left: 0;
@@ -16,7 +16,7 @@ body
 .crop{
     background-color: inherit;
     border: 1px solid black;
-    position:fixed;
+    position:absolute;
     overflow: hidden;
 }
 
@@ -32,6 +32,7 @@ body
 
 #apply{
     padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 .selectClip{
