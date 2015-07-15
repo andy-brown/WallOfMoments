@@ -25,7 +25,17 @@ if(get('edit') != null){
 	showEdit = true;
 }
 else{
-	width = screen.availWidth, height = screen.availHeight;
+	var aspect = 16/9;
+	if(screen.availWidth/screen.availHeight > aspect){
+		width = screen.availWidth;
+		height = width/aspect;
+	}
+	else{
+		height = screen.availHeight;
+		width = height*aspect;
+	}
+	// width = screen.availWidth, height = screen.availHeight;
+	document.body.style.backgroundColor = 'black';
 }
 
 // get comfig file, then set up
