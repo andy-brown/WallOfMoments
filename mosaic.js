@@ -6,7 +6,7 @@ var width = mon.clientWidth, height = mon.clientHeight;
 var config;
 var playLists = {};
 var layout;
-var showEdit = true; // false;
+var showEdit = false;
 var building = false; // are we re-building the wall?
 
 // need playlist of objects for each stream...
@@ -19,6 +19,13 @@ var configFile = "setup.json";
 var cf = get('config');
 if(cf != null){
 	configFile = cf + ".json";
+}
+
+if(get('edit') != null){
+	showEdit = true;
+}
+else{
+	width = screen.availWidth, height = screen.availHeight;
 }
 
 // get comfig file, then set up
@@ -42,9 +49,11 @@ function start(edit){
 		populateConfig(config);
 		document.getElementById('after').style.visibility = "visible";
 	}
-	var streams = createLayout(layoutId);
-	createplayLists(streams);
-	populateLayout();
+	else{
+		var streams = createLayout(layoutId);
+		createplayLists(streams);
+		populateLayout();
+	}
 }
 
 
@@ -144,7 +153,7 @@ function populateLayout(){
 		});
 	}
 	var montage = document.getElementById('montage');
-	// montage.style.backgroundColor = "black";
+	montage.style.backgroundColor = "black";
 }
 
 
@@ -152,7 +161,8 @@ function populateLayout(){
 function areAllLoaded(){
 	var allDone = true;
 	for(var k in playLists){
-		allDone = (allDone && playLists[k].loaded);
+		var loaded = playLists[k].loaded || playLists[k].list.length == 0;
+		allDone = (allDone && loaded);
 	}
 	return allDone;
 }
