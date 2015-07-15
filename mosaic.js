@@ -60,12 +60,19 @@ function start(edit){
 // take the config data and layout the streams
 // takes a list of ids for the elements in each location
 function createplayLists(streams){
+	var sound = config.sound;
+	if(sound == null){
+		sound = 1;
+	}
 
 	// one playlist for each layout position
 	// populate them from the config data
 	for(var i = 0; i < streams.length; i++){
 		var vId = streams[i];
-		playLists[vId] = {list: [], location: i, loaded: false};
+
+		var audio = (sound === (i+1));
+		playLists[vId] = {list: [], location: i, loaded: false, sound: audio };
+
 
 		if(config.positions[i+1]){
 			var videos = config.positions[i+1];
@@ -109,6 +116,7 @@ function createLayout(layoutId){
 function addStreamToLayout(streamId){
 	var vidEl = document.createElement('video');
 	vidEl.id = "vid" + streamId;
+	vidEl.muted = true;
 
 	// get position of this stream
 	var pos = layout[streamId];
@@ -142,6 +150,7 @@ function populateLayout(){
 		// add listener for video finishing
 		var vidEl = document.getElementById(k);
 		addNextVideoListener(vidEl);
+		if(playLists[k].sound){vidEl.muted = false;}
 
 		// listen for load complete
 		vidEl.addEventListener('loadeddata', function(){
