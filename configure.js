@@ -223,15 +223,27 @@ function populateConfig(conf){
 
 // apply the config and run it
 function apply(fullScreen){
-	if(fullScreen){
-		setSize(false);
-	}
 	building = true;
 	emptyElement('montage');
 	config = newConfig;
 	start(false);
+	if(fullScreen){
+		goFullScreen();
+	}
 }
 
+
+document.addEventListener('keydown', function(ev){
+	if(ev.keyCode == 70){
+		if(fullScreen){
+			exitFullScreen();
+		}
+		else{
+			goFullScreen();
+		}
+	}
+
+});
 
 // save the config
 function save(){

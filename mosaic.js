@@ -2,6 +2,7 @@
 var mon = document.getElementById("montage");
 var aspect = 16/9;
 var width, height;
+var fullScreen = false;
 
 // a list of the video elements, for later manipulation
 var config;
@@ -42,8 +43,13 @@ xmlhttp.send();
 
 // sets size parameters and styling for view or edit
 function setSize(edit){
+	var mon = document.getElementById('montage');
 	if(edit){
 		width = mon.clientWidth, height = width/aspect;
+		mon.style.width = "";
+		mon.style.height = "";
+		mon.className = 'montage';
+		document.body.style.backgroundColor = 'white';
 	}
 	else{
 		if(screen.availWidth/screen.availHeight > aspect){
@@ -54,7 +60,9 @@ function setSize(edit){
 			width = screen.availWidth;
 			height = width/aspect;
 		}
-		document.getElementById('montage').className += ' view';
+		mon.className += ' view';
+		mon.style.width = width + "px";
+		mon.style.height = height + "px";
 		document.body.style.backgroundColor = 'black';
 	}
 }
@@ -62,6 +70,7 @@ function setSize(edit){
 
 // set mosaic to full screen
 function goFullScreen(){
+	setSize(false);
 	var fullScreenDiv = document.getElementById('montage');
 	if (fullScreenDiv.webkitRequestFullScreen){
 		fullScreenDiv.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
@@ -70,6 +79,13 @@ function goFullScreen(){
 		fullScreenDiv.mozRequestFullScreen();
 		fullScreenDiv.style.cursor = 'none';
 	}
+	fullScreen = true;
+}
+
+function exitFullScreen(){
+	// document.cancelFullScreen();
+	setSize(true);
+	document.webkitCancelFullScreen();
 }
 
 // set up layout, generate play lists, populate layout and play
