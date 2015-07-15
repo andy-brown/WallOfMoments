@@ -3,7 +3,7 @@
 	"positions": {
 			"1": [
 			{
-				"path": "/videos/autumnwatch.mp4",
+				"path": "videos/autumnwatch.mp4",
 				"end": 25,
 				"crop":{
 					"top": 0.25,
@@ -13,12 +13,12 @@
 				}
 			},
 			{
-				"path": "/videos/philharmonic.webm",
+				"path": "videos/philharmonic.webm",
 				"start": 0,
 				"end": 30
 			},
 			{
-				"path": "/videos/greece.webm",
+				"path": "videos/greece.webm",
 				"start": 1,
 				"crop":{
 					"top": 0.125,
@@ -30,24 +30,24 @@
 		],
 			"2": [
 			{
-				"path": "/videos/philharmonic.webm",
+				"path": "videos/philharmonic.webm",
 				"end": 30
 			}
 		],
 			"4": [
 			{
-				"path": "/videos/greece.webm",
+				"path": "videos/greece.webm",
 				"start": 25
 			}
 		],
 			"3": [
 			{
-				"path": "/videos/autumnwatch.mp4"
+				"path": "videos/autumnwatch.mp4"
 			}
 		],
 			"6": [
 			{
-				"path": "/videos/greece.webm",
+				"path": "videos/greece.webm",
 				"end": 30,
 				"crop":{
 					"top": 0.1,
@@ -59,7 +59,7 @@
 		],
 			"5": [
 			{
-				"path": "/videos/philharmonic.webm",
+				"path": "videos/philharmonic.webm",
 				"end": 30
 			}
 			]
