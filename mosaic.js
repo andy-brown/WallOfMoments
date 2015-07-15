@@ -1,7 +1,7 @@
 // get size of montage area from css
 var mon = document.getElementById("montage");
 var aspect = 16/9;
-var width = mon.clientWidth, height = width/aspect;
+var width, height;
 
 // a list of the video elements, for later manipulation
 var config;
@@ -25,17 +25,8 @@ if(cf != null){
 if(get('edit') != null){
 	showEdit = true;
 }
-else{
-	if(screen.availWidth/screen.availHeight > aspect){
-		height = screen.availHeight;
-		width = height*aspect;
-	}
-	else{
-		width = screen.availWidth;
-		height = width/aspect;
-	}
-	document.body.style.backgroundColor = 'black';
-}
+
+setSize(showEdit);
 
 // get comfig file, then set up
 xmlhttp.onreadystatechange = function() {
@@ -47,6 +38,26 @@ xmlhttp.onreadystatechange = function() {
 };
 xmlhttp.open("GET", configFile, true);
 xmlhttp.send();
+
+
+// sets size parameters and styling for view or edit
+function setSize(edit){
+	if(edit){
+		width = mon.clientWidth, height = width/aspect;
+	}
+	else{
+		if(screen.availWidth/screen.availHeight > aspect){
+			height = screen.availHeight;
+			width = height*aspect;
+		}
+		else{
+			width = screen.availWidth;
+			height = width/aspect;
+		}
+		document.getElementById('montage').className += ' view';
+		document.body.style.backgroundColor = 'black';
+	}
+}
 
 
 // set up layout, generate play lists, populate layout and play
@@ -172,8 +183,6 @@ function populateLayout(){
 	}
 	var montage = document.getElementById('montage');
 	montage.style.backgroundColor = "black";
-	montage.style.left = 0;
-	montage.style.top = 0;
 }
 
 
