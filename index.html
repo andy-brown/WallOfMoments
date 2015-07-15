@@ -7,15 +7,16 @@
     </head>
 
     <body>
-        <div id='montage'></div>
+        <div id='montage' class='montage'></div>
         <script src="mosaic.js"></script>
         <div id='after'>
             <div id='layoutSelector'></div>
             <div id='clipSelector'></div>
             <!-- div id='config'>Hello</div -->
             <div id='apply'>
-                <button onclick='javascript:load();'>Load</button>
-                <button onclick='javascript:apply();'>Run</button>
+                <!-- button onclick='javascript:load();'>Load</button -->
+                <button onclick='javascript:apply();'>Play</button>
+                <button onclick='javascript:apply(true);'>Run fullscreen</button>
                 <button onclick='javascript:save();'>Save</button>
             </div>
         </div>
