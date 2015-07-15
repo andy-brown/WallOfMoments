@@ -195,7 +195,6 @@ function populateConfig(conf){
 function apply(){
 	building = true;
 	emptyElement('montage');
-	playLists = {};//  = null;
 	config = newConfig;
 	start(false);
 }
