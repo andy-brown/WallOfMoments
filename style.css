@@ -2,21 +2,19 @@ body
 {
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 #montage
 {
     position: fixed;
-    background-color: black;
+    background-color: white;
     top: 0;
     left: 0;
-    width: 960px; // 1280px;
-    height: 540px; // 720px;
-    overflow: hidden;
+    width: 640px;// 960px; // 1280px;
+    height: 360px; // 540px; // 720px;
 }
 
 .crop{
-    // background-color: none;
+    background-color: inherit;
     border: 1px solid black;
     position:fixed;
     overflow: hidden;
@@ -28,9 +26,8 @@ body
 
 #after{
     visibility: hidden;
-    position:fixed;
-    top:580px;
-    left:1em;
+    // margin-top:600px;
+    margin-left:1em;
 }
 
 #apply{
@@ -46,4 +43,30 @@ body
 
 .selectClip input{
     margin-left: 0.5em;
+}
+
+.selectClip li{
+    padding: 0;
+}
+
+.selectClip *{
+    vertical-align: middle;
+}
+.remove{
+    // margin-right: 1em;
+    border: none;
+    background-color: white; // #eeeeee;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    font-size: 150%;
+    color: gray;
+    vertical-align: middle;
+}
+
+input[type='number']{
+    width: 5em;
+}
+
+ol{
+    margin: 0;
 }
