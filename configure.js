@@ -114,6 +114,9 @@ function addClip(locationId, url, start, stop){
 	var c = { "path": url,
 				"start": start,
 				"end": stop };
+	if(newConfig.positions[locationId] == null){
+		newConfig.positions[locationId] = [];
+	}
 	newConfig.positions[locationId].push(c);
 
 	var listEl = document.getElementById('vidList' + locationId);
@@ -160,7 +163,7 @@ function addTrackSpecifiers(layoutId){
 // change the layout for the one specified
 function updateLayout(layoutId){
 
-	var conf = copyConfig(newConfig);
+	var conf = copyConfig(newConfig, layoutId);
 	conf.layout = layoutId;
 	playLists = {};
 	emptyElement('montage');
@@ -180,12 +183,17 @@ function updateLayout(layoutId){
 
 }
 
-function copyConfig(old){
+function copyConfig(old, newId){
+	var newStreamCount = layouts[newId].length;
 	var copy = {};
 	copy.layout = old.layout;
 	copy.positions = [];
+	var i = 0;
 	for(var k in old.positions){
-		copy.positions[k] = old.positions[k];
+		if(i < newStreamCount){
+			copy.positions[k] = old.positions[k];
+		}
+		i++;
 	}
 	return copy;
 }
