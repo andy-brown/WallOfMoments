@@ -10,7 +10,13 @@
 			{
 				"path": "videos/philharmonic.webm",
 				"start": 0,
-				"end": 30
+				"end": 30,
+				"crop":{
+					"top": 0.1,
+					"left": 0.05,
+					"width": 0.9,
+					"height": 0.9
+				}
 			},
 			{
 				"path": "videos/greece.webm",
@@ -26,7 +32,13 @@
 			"2": [
 			{
 				"path": "videos/philharmonic.webm",
-				"end": 30
+				"end": 30,
+				"crop":{
+					"top": 0.1,
+					"left": 0.05,
+					"width": 0.9,
+					"height": 0.9
+				}
 			}
 			],
 			"3": [
@@ -35,7 +47,7 @@
 				"start": 25,
 				"crop":{
 					"top": 0.1,
-					"left": 0.1,
+					"left": 0.05,
 					"width": 0.9,
 					"height": 0.9
 				}
