@@ -4,13 +4,7 @@
 		"1": [
 			{
 				"path": "videos/autumnwatch.mp4",
-				"end": 8,
-				"crop":{
-					"top": 0.25,
-					"left": 0.25,
-					"width": 0.5,
-					"height": 0.5
-				}
+				"end": 8
 			},
 			{
 				"path": "videos/philharmonic.webm",
@@ -48,7 +42,13 @@
 		],
 			"4": [
 			{
-				"path": "videos/autumnwatch.mp4"
+				"path": "videos/autumnwatch.mp4",
+				"crop":{
+					"top": 0.25,
+					"left": 0.25,
+					"width": 0.5,
+					"height": 0.5
+				}
 			}
 			]
 		}
