@@ -3,14 +3,19 @@ body
     margin: 0;
     padding: 0;
 }
-#montage
+.montage
 {
     position: absolute;
     background-color: white;
+    top: 10px;
+    left: 10px;
+    width: 640px;// 960px; // 1280px;
+}
+
+.view{
     top: 0;
     left: 0;
-    width: 640px;// 960px; // 1280px;
-    height: 360px; // 540px; // 720px;
+    background-color: black;
 }
 
 .crop{
@@ -54,13 +59,11 @@ body
     vertical-align: middle;
 }
 .remove{
-    // margin-right: 1em;
     border: none;
     background-color: white; // #eeeeee;
-    padding-left: 0.3em;
-    padding-right: 0.3em;
+    padding: 0 0.3em 0 0.3em;
     font-size: 150%;
-    color: gray;
+    color: #bbbbbb;
     vertical-align: middle;
 }
 
