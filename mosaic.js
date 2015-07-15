@@ -1,6 +1,7 @@
 // get size of montage area from css
 var mon = document.getElementById("montage");
-var width = mon.clientWidth, height = mon.clientHeight;
+var aspect = 16/9;
+var width = mon.clientWidth, height = width/aspect;
 
 // a list of the video elements, for later manipulation
 var config;
@@ -25,16 +26,14 @@ if(get('edit') != null){
 	showEdit = true;
 }
 else{
-	var aspect = 16/9;
 	if(screen.availWidth/screen.availHeight > aspect){
-		width = screen.availWidth;
-		height = width/aspect;
-	}
-	else{
 		height = screen.availHeight;
 		width = height*aspect;
 	}
-	// width = screen.availWidth, height = screen.availHeight;
+	else{
+		width = screen.availWidth;
+		height = width/aspect;
+	}
 	document.body.style.backgroundColor = 'black';
 }
 
@@ -173,6 +172,8 @@ function populateLayout(){
 	}
 	var montage = document.getElementById('montage');
 	montage.style.backgroundColor = "black";
+	montage.style.left = 0;
+	montage.style.top = 0;
 }
 
 
@@ -257,8 +258,12 @@ function cropVideoContainer(vidEl, streamId, crop){
 	// scale to zoom in (and thus crop)
 	var scaledWidth = (pos.width * width)/crop.width;
 	var scaledHeight = (pos.height * height)/crop.height;
-	vidEl.style.width = scaledWidth + "px";
-	vidEl.style.height = scaledHeight + "px";
+	if(vidEl.width/vidEl.height > aspect){
+		vidEl.style.width = scaledWidth + "px";
+	}
+	else{
+		vidEl.style.height = scaledHeight + "px";
+	}
 	// shift so correct area is visible
 	vidEl.style.marginLeft = -(crop.left * scaledWidth) + "px";
 	vidEl.style.marginTop = -(crop.top * scaledHeight) + "px";
