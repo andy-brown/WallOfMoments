@@ -7,6 +7,8 @@ var config;
 var playLists = {};
 var layout;
 var showEdit = true; // false;
+var loadedStreams = []; // which streams are loaded
+var building = false; // are we re-building the wall?
 
 // need playlist of objects for each stream...
 
@@ -73,7 +75,6 @@ function createplayLists(streams){
 			}
 		}
 	}
-	console.log(playLists);
 }
 
 
@@ -126,6 +127,7 @@ function addStreamToLayout(streamId){
 // and add listeners so streams can go through lists
 function populateLayout(){
 	for (var k in playLists){
+		loadedStreams[k] = false;
 		var list = playLists[k].list;
 		var vidObj = list.shift();
 		setVideoStream(k, vidObj);
@@ -134,6 +136,22 @@ function populateLayout(){
 		var vidEl = document.getElementById(k);
 		addNextVideoListener(vidEl);
 
+		vidEl.addEventListener('loadeddata', function(){
+			console.log("loaded " + this.id);
+			loadedStreams[this.id] = true;
+			var allDone = true;
+			for(var k in loadedStreams){
+				allDone = (allDone && loadedStreams[k]);
+			}
+			building = allDone;
+			if(allDone){
+				for(var k in loadedStreams){
+					document.getElementById(k).play();
+				}
+				console.log("all loaded");
+			}
+		});
+		// addNextVideoListener(vidEl);
 	}
 	var montage = document.getElementById('montage');
 	// montage.style.backgroundColor = "black";
@@ -153,6 +171,11 @@ function addNextVideoListener(stream){
 
 // play the next video in the playList for this stream
 function nextVid(streamId){
+	if(building){
+		console.log("can't update during building");
+		return;
+	}
+
 	if(!playLists[streamId]){ return; } // may have gone...
 	var list = playLists[streamId].list;
 	if(list.length > 0){
@@ -213,7 +236,7 @@ function setVideoStream(streamId, vidObj){
 		// change crop
 		cropVideoContainer(vidEl, streamId, vidObj.crop)
 		// play
-		vidEl.play();
+		// vidEl.play();
 	}
 }
 
