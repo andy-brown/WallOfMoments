@@ -222,7 +222,10 @@ function populateConfig(conf){
 
 
 // apply the config and run it
-function apply(){
+function apply(fullScreen){
+	if(fullScreen){
+		setSize(false);
+	}
 	building = true;
 	emptyElement('montage');
 	config = newConfig;
