@@ -193,6 +193,7 @@ function populateConfig(conf){
 
 // apply the config and run it
 function apply(){
+	building = true;
 	emptyElement('montage');
 	playLists = {};//  = null;
 	config = newConfig;
