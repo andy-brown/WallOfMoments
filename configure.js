@@ -1,6 +1,7 @@
 var newConfig = {};
 
 function addLayoutSelector(lId){
+	document.getElementById('after').style.marginTop = (height + 50) + 'px';
 	var options = document.createElement('select');
 	options.id = 'layoutSelect';
 	for (k in layouts){
@@ -43,22 +44,22 @@ function addClipAdder(layoutPosition){
 	clipName.type = 'text';
 	clipName.id = 'clip' + layoutPosition;
 	clipName.name = layoutPosition;
-	newClip.addEventListener("mouseover", function(ev){
+	newClip.addEventListener("mouseenter", function(ev){
 		// console.log(ev.target.name);
 		var vId = parseInt(ev.target.name)-1;
 		var vidEl = document.getElementById('crop' + vId);
 		if(vidEl){
 			vidEl.className += " highlight"
 		}
-	});
-	clipName.onmouseout = function(ev){
+	}, true);
+	newClip.addEventListener("mouseleave", function(ev){
 		// console.log(ev.target.name);
 		var vId = parseInt(ev.target.name)-1;
 		var vidEl = document.getElementById('crop' + vId);
 		if(vidEl){
 			vidEl.className = "crop"
 		}
-	};
+	});
 	newClip.appendChild(clipName);
 
 	var start = document.createElement('input');
@@ -73,7 +74,9 @@ function addClipAdder(layoutPosition){
 
 	var add = document.createElement('button');
 	add.value = 'Add';
-	add.appendChild(document.createTextNode("Add"));
+	add.className = "remove";
+	add.innerHTML = "&oplus;";
+	// add.appendChild(document.createTextNode("Add"));
 	add.onclick = function(){
 		selectClip(layoutPosition);
 	};
@@ -117,11 +120,10 @@ function addClip(locationId, url, start, stop){
 	var listItem = document.createElement('li');
 	listItem.id = locationId + "-" + newConfig.positions[locationId].length;
 	var timeSnippet = encodeTimes(start, stop);
-	listItem.appendChild(document.createTextNode(url + " " + timeSnippet));
 
 	// remove button...
 	var remBut = document.createElement('button');
-	remBut.appendChild(document.createTextNode("remove"));
+	remBut.innerHTML = '&otimes;';
 	remBut.id = 'remove-' + listItem.id;
 	remBut.className = 'remove';
 	remBut.addEventListener('click', function(ev){
@@ -138,6 +140,9 @@ function addClip(locationId, url, start, stop){
 		// populateConfig(newConfig);
 	});
 	listItem.appendChild(remBut);
+	var sp = document.createElement('span');
+	sp.appendChild(document.createTextNode(url + " " + timeSnippet));
+	listItem.appendChild(sp);
 
 	listEl.appendChild(listItem);
 
@@ -150,14 +155,17 @@ function addTrackSpecifiers(layoutId){
 		var clipSelector = addClipAdder(i+1);
 		cont.appendChild(clipSelector);
 	}
-
-
 }
 
 // change the layout for the one specified
 function updateLayout(layoutId){
-	playLists = {};//  = null;
+
+	var conf = copyConfig(newConfig);
+	conf.layout = layoutId;
+	playLists = {};
 	emptyElement('montage');
+	var montage = document.getElementById('montage');
+	montage.style.backgroundColor = "white";
 	emptyElement('clipSelector');
 	var streams = createLayout(layoutId);
 	newConfig.layout = layoutId;
@@ -166,8 +174,21 @@ function updateLayout(layoutId){
 		newConfig.positions[i+1] = [];
 	}
 	addTrackSpecifiers(layoutId);
+	if(conf.positions != null && conf.positions.length > 0){
+		populateConfig(conf);
+	}
+
 }
 
+function copyConfig(old){
+	var copy = {};
+	copy.layout = old.layout;
+	copy.positions = [];
+	for(var k in old.positions){
+		copy.positions[k] = old.positions[k];
+	}
+	return copy;
+}
 
 // empty the mosaic
 function emptyElement(elId){
@@ -183,6 +204,7 @@ function populateConfig(conf){
 	for (k in conf.positions){
 		for(var i=0; i< conf.positions[k].length; i++){
 			var vid = conf.positions[k][i];
+			console.log('adding ' + vid.path + ' to ' + vid);
 			addClip(k, vid.path, vid.start, vid.end);
 		}
 	}
