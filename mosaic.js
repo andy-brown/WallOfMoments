@@ -286,8 +286,8 @@ function cropVideoContainer(vidEl, streamId, crop){
 		vidEl.style.height = scaledHeight + "%";
 	}
 	// shift so correct area is visible
-	vidEl.style.marginLeft = -(crop.left * scaledWidth) + "%";
-	vidEl.style.marginTop = -(crop.top * scaledHeight) + "%";
+	vidEl.style.marginLeft = -(crop.left*scaledWidth) + "%";
+	vidEl.style.marginTop = -(crop.top*scaledWidth/aspect) + "%";
 }
 
 
