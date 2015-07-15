@@ -49,7 +49,7 @@ function setSize(edit){
 		mon.style.width = "";
 		mon.style.height = "";
 		mon.className = 'montage';
-		document.body.style.backgroundColor = 'white';
+		document.body.className = '';
 	}
 	else{
 		if(screen.availWidth/screen.availHeight > aspect){
@@ -63,7 +63,7 @@ function setSize(edit){
 		mon.className += ' view';
 		mon.style.width = width + "px";
 		mon.style.height = height + "px";
-		document.body.style.backgroundColor = 'black';
+		document.body.className = 'view';
 	}
 }
 
