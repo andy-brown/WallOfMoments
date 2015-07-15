@@ -60,6 +60,18 @@ function setSize(edit){
 }
 
 
+// set mosaic to full screen
+function goFullScreen(){
+	var fullScreenDiv = document.getElementById('montage');
+	if (fullScreenDiv.webkitRequestFullScreen){
+		fullScreenDiv.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+	}
+	else{
+		fullScreenDiv.mozRequestFullScreen();
+		fullScreenDiv.style.cursor = 'none';
+	}
+}
+
 // set up layout, generate play lists, populate layout and play
 function start(edit){
 	var layoutId = parseInt(config.layout);
@@ -145,10 +157,10 @@ function addStreamToLayout(streamId){
 	var cropEl = document.createElement('div');
 	cropEl.className = 'crop';
 	cropEl.id = 'crop' + streamId;
-	cropEl.style.top = (pos.top * height) + "px";
-	cropEl.style.left = (pos.left * width) + "px";
-	cropEl.style.width = (pos.width * width) + "px";
-	cropEl.style.height = (pos.height * height) + "px";
+	cropEl.style.top = (pos.top * 100) + "%";
+	cropEl.style.left = (pos.left * 100) + "%";
+	cropEl.style.width = (pos.width * 100) + "%";
+	cropEl.style.height = (pos.height * 100) + "%";
 
 	// add container to montage
 	var container = document.getElementById('montage');
@@ -265,17 +277,17 @@ function cropVideoContainer(vidEl, streamId, crop){
 		crop = {left:0, top:0, width: 1, height: 1 };
 	}
 	// scale to zoom in (and thus crop)
-	var scaledWidth = (pos.width * width)/crop.width;
-	var scaledHeight = (pos.height * height)/crop.height;
+	var scaledWidth = 100/crop.width;
+	var scaledHeight = 100/crop.height;
 	if(vidEl.width/vidEl.height > aspect){
-		vidEl.style.width = scaledWidth + "px";
+		vidEl.style.width = scaledWidth + "%";
 	}
 	else{
-		vidEl.style.height = scaledHeight + "px";
+		vidEl.style.height = scaledHeight + "%";
 	}
 	// shift so correct area is visible
-	vidEl.style.marginLeft = -(crop.left * scaledWidth) + "px";
-	vidEl.style.marginTop = -(crop.top * scaledHeight) + "px";
+	vidEl.style.marginLeft = -(crop.left * scaledWidth) + "%";
+	vidEl.style.marginTop = -(crop.top * scaledHeight) + "%";
 }
 
 
