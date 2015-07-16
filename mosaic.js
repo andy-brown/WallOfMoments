@@ -8,7 +8,7 @@ var fullScreen = false;
 var config;
 var playLists = {};
 var layout;
-var showEdit = false;
+var showEdit = true;
 var building = false; // are we re-building the wall?
 
 // need playlist of objects for each stream...
@@ -23,8 +23,8 @@ if(cf != null){
 	configFile = cf + ".json";
 }
 
-if(get('edit') != null){
-	showEdit = true;
+if(get('view') != null){
+	showEdit = false;
 }
 
 setSize(showEdit);
@@ -125,16 +125,22 @@ function createplayLists(streams){
 		if(config.positions[i+1]){
 			var videos = config.positions[i+1];
 			for(var j = 0; j < videos.length; j++){
-				// encode start and end times in url
-				var path = videos[j].path;
-				path += encodeTimes(videos[j].start, videos[j].end);
+				if(videos[j].data){
+					var dataObj = new DataSegment(videos[j].data, videos[j].end);
+					playLists[vId].list.push(dataObj);
+				}
+				else{
+					// encode start and end times in url
+					var path = videos[j].path;
+					path += encodeTimes(videos[j].start, videos[j].end);
 
-				// get placement and crop information
-				var crop = videos[j].crop;
+					// get placement and crop information
+					var crop = videos[j].crop;
 
-				// create object and add to playlist
-				var vidObj = new VideoSegment(path, crop);
-				playLists[vId].list.push(vidObj);
+					// create object and add to playlist
+					var vidObj = new VideoSegment(path, crop);
+					playLists[vId].list.push(vidObj);
+				}
 			}
 		}
 	}
@@ -159,9 +165,14 @@ function createLayout(layoutId){
 
 
 // add a stream to the layout
-// creates an element to hold the video, and one to crop it
-// and adds these to the mosaic
+// creates a window element for cropping, which contains
+// a video element and an iframe (for data)
+// and adds the stream window to the mosaic
 function addStreamToLayout(streamId){
+	var dataEl = document.createElement('iframe');
+	dataEl.id = "vid" + streamId + "data";
+	dataEl.hidden = true;
+
 	var vidEl = document.createElement('video');
 	vidEl.id = "vid" + streamId;
 	vidEl.muted = true;
@@ -182,6 +193,7 @@ function addStreamToLayout(streamId){
 	var container = document.getElementById('montage');
 	container.appendChild(cropEl);
 	cropEl.appendChild(vidEl);
+	cropEl.appendChild(dataEl);
 
 	return vidEl;
 }
@@ -194,6 +206,14 @@ function populateLayout(){
 		var list = playLists[k].list;
 		var vidObj = list.shift();
 		setVideoStream(k, vidObj);
+
+		// change data after set time
+		if(vidObj.isData && vidObj.end){
+			window.setTimeout(function(){
+				nextVid(k);
+			}, vidObj.end*1000);
+			playLists[k].loaded = true;
+		}
 
 		// add listener for video finishing
 		var vidEl = document.getElementById(k);
@@ -310,16 +330,32 @@ function cropVideoContainer(vidEl, streamId, crop){
 // replace the video in a stream with the given VideoSegment object
 function setVideoStream(streamId, vidObj){
 	var vidEl = document.getElementById(streamId);
-	if(vidObj != null && vidEl != null){ // make sure we have an object
-		// change src
-		vidEl.src = vidObj.url;
-		// change crop
-		cropVideoContainer(vidEl, streamId, vidObj.crop)
-		// play
-		// vidEl.play();
+	var dataEl = document.getElementById(streamId + 'data');
+
+	if(vidObj.isData){
+		dataEl.src = vidObj.url;
+		dataEl.hidden = false;
+		vidEl.hidden = true;
+		// change at end (no event generated)
+		if(vidObj.end){
+			window.setTimeout(function(){
+				nextVid(streamId);
+			}, vidObj.end*1000);
+		}
+	}
+	else{
+		dataEl.hidden = true;
+		if(vidObj != null && vidEl != null){ // make sure we have an object
+			// change src
+			vidEl.src = vidObj.url;
+			// change crop
+			cropVideoContainer(vidEl, streamId, vidObj.crop)
+			// play
+			vidEl.hidden = false;
+			// vidEl.play();
+		}
 	}
 }
-
 
 // an object representing a segment of the montage for
 // a single video
@@ -328,6 +364,11 @@ var VideoSegment = function(url, crop){
 	this.crop = crop;
 };
 
+var DataSegment = function(url, end){
+	this.isData = true;
+	this.url = url;
+	this.end = end;
+}
 
 // retrieve a GET parameter
 function get(name){
