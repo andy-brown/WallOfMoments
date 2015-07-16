@@ -234,13 +234,27 @@ function apply(fullScreen){
 
 
 document.addEventListener('keydown', function(ev){
-	if(ev.keyCode == 70){
+	// console.log(ev);
+	if(ev.keyCode == 70){ // F
 		if(fullScreen){
 			exitFullScreen();
 		}
 		else{
 			goFullScreen();
 		}
+	}
+	else if(ev.keyCode == 80){ // P
+		// if not built, then run apply(false)
+		var pl = Object.keys(playLists);
+		if(pl.length == 0){
+			apply(false);
+		}
+		// play/pause
+		playPause();
+	}
+	else if(ev.keyCode == 69){ // E
+		// empty mosaic
+		updateLayout(newConfig.layout);
 	}
 
 });
