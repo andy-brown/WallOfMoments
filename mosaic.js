@@ -334,3 +334,21 @@ function get(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
 }
+
+
+// play/pause all videos
+// toggles the state of each video individually, and doesn't
+// check that they're all doing the same thing
+function playPause(){
+	for(var k in playLists){
+		var vidEl = document.getElementById(k);
+		if(vidEl.paused){
+			vidEl.play();
+			building = false;
+		}
+		else{
+			building = true;
+			vidEl.pause();
+		}
+	}
+}
