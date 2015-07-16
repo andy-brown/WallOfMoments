@@ -13,6 +13,17 @@ body
     height: 360px;
 }
 
+iframe{
+    /*position:absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;*/
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+
 .view{
     top: 0;
     left: 0;
