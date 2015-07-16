@@ -37,15 +37,18 @@
 			"2": [
 			{
 				"path": "videos/philharmonic.webm",
-				"end": 30,
+				"end": 20,
 				"crop":{
 					"top": 0.1,
 					"left": 0.05,
 					"width": 0.9,
 					"height": 0.9
 				}
+			},
+			{
+				"data": "http://www.bbc.co.uk/"
 			}
-		],
+			],
 			"4": [
 			{
 				"path": "videos/greece.webm",
@@ -64,6 +67,9 @@
 			}
 		],
 			"6": [
+			{
+				"data": "http://localhost:3000/dialSessionVis.html?s=test"
+			},
 			{
 				"path": "videos/greece.webm",
 				"end": 30,
