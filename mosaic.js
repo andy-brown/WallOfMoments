@@ -65,6 +65,14 @@ function setSize(edit){
 		mon.style.height = height + "px";
 		document.body.className = 'view';
 	}
+	var ifs = document.getElementsByTagName('iframe');
+	for(var i = 0; i < ifs.length; i++){
+		ifs[i].style.transform = 'scale(' + ((width/1600)) + ')';
+		var shift = -(1-(width/1600))*1600;
+		ifs[i].style.left = shift/2 + "px";
+		var shift = -(1-(width/1600))*900;
+		ifs[i].style.top = shift/2 + "px";
+	}
 }
 
 
