@@ -189,11 +189,33 @@ function addStreamToLayout(streamId){
 	cropEl.style.width = (pos.width * 100) + "%";
 	cropEl.style.height = (pos.height * 100) + "%";
 
+    // add position identifier
+    var posNumberEl = document.createElement('div');
+    posNumberEl.className = 'pos-number';
+    posNumberEl.textContent = (1+streamId);
+    
 	// add container to montage
 	var container = document.getElementById('montage');
 	container.appendChild(cropEl);
+    cropEl.appendChild(posNumberEl);
 	cropEl.appendChild(vidEl);
 	cropEl.appendChild(dataEl);
+	
+    // reverse highlight
+    function getSelectClip() {
+        var ol = document.getElementById('vidList'+(1+streamId));
+        return ol.parentElement;
+    };
+    cropEl.addEventListener("mouseenter", function(ev){
+        getSelectClip().className = 'selectClip highlight';
+    });
+    cropEl.addEventListener("mouseleave", function(ev){
+        getSelectClip().className = 'selectClip';
+    });
+    cropEl.addEventListener("click", function(ev){
+        var r = getSelectClip().getBoundingClientRect();
+        window.scrollTo(r.x,r.y);
+    });
 
 	return vidEl;
 }
@@ -202,6 +224,9 @@ function addStreamToLayout(streamId){
 // populate the layout from the playLists
 // and add listeners so streams can go through lists
 function populateLayout(){
+    Array.prototype.forEach.call(document.querySelectorAll('.pos-number'), function(item) {
+        item.style.display = 'none';
+    });
 	for (var k in playLists){
 		var list = playLists[k].list;
 		var vidObj = list.shift();
