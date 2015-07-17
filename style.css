@@ -45,6 +45,19 @@ iframe{
     overflow: hidden;
 }
 
+.pos-number {
+    position: absolute;
+    left: 50%;
+    top:50%;
+    width: 50px;
+    margin-left: -25px;
+    text-align: center;
+    margin-top: -30px;
+    font-size: 60px;
+    font-weight: bold;
+    color: #0000ff;
+}
+
 .highlight{
     background-color: #ffdddd;
 }

@@ -44,6 +44,8 @@ function addClipAdder(layoutPosition){
 	clipName.type = 'text';
 	clipName.id = 'clip' + layoutPosition;
 	clipName.name = layoutPosition;
+    clipName.placeholder = 'Clip file';
+    
 	newClip.addEventListener("mouseenter", function(ev){
 		// console.log(ev.target.name);
 		var vId = parseInt(ev.target.name)-1;
@@ -65,11 +67,13 @@ function addClipAdder(layoutPosition){
 	var start = document.createElement('input');
 	start.type = "number";
 	start.id = 'start' + layoutPosition;
+    start.placeholder = 'Start';
 	newClip.appendChild(start);
 
 	var end = document.createElement('input');
 	end.type = "number";
 	end.id = 'end' + layoutPosition;
+    end.placeholder = 'End';
 	newClip.appendChild(end);
 
 	var add = document.createElement('button');
