@@ -4,6 +4,9 @@ var aspect = 16/9;
 var width, height;
 var fullScreen = false;
 
+// do we loop each stream when it ends?
+var looping = true;
+
 // a list of the video elements, for later manipulation
 var config;
 var playLists = {};
@@ -127,7 +130,7 @@ function createplayLists(streams){
 		var vId = streams[i];
 
 		var audio = (sound === (i+1));
-		playLists[vId] = {list: [], location: i, loaded: false, sound: audio };
+		playLists[vId] = {list: [], location: i, loaded: false, sound: audio, position: 0 };
 
 
 		if(config.positions[i+1]){
@@ -201,14 +204,14 @@ function addStreamToLayout(streamId){
     var posNumberEl = document.createElement('div');
     posNumberEl.className = 'pos-number';
     posNumberEl.textContent = (1+streamId);
-    
+
 	// add container to montage
 	var container = document.getElementById('montage');
 	container.appendChild(cropEl);
     cropEl.appendChild(posNumberEl);
 	cropEl.appendChild(vidEl);
 	cropEl.appendChild(dataEl);
-	
+
     // reverse highlight
     function getSelectClip() {
         var ol = document.getElementById('vidList'+(1+streamId));
@@ -237,7 +240,7 @@ function populateLayout(){
     });
 	for (var k in playLists){
 		var list = playLists[k].list;
-		var vidObj = list.shift();
+		var vidObj = list[0];
 		setVideoStream(k, vidObj);
 
 		// change data after set time
@@ -307,15 +310,24 @@ function nextVid(streamId){
 
 	if(!playLists[streamId]){ return; } // may have gone...
 	var list = playLists[streamId].list;
-	if(list.length > 0){
-		var nextV = list.shift();
-		console.log("moving to next video in stream " + streamId);
-		setVideoStream(streamId, nextV);
-		return true;
+	var currentPosition = playLists[streamId].position;
+	currentPosition += 1;
+	if(currentPosition >= list.length){
+		// at end
+		if(looping){
+			currentPosition = 0;
+			console.log('looping stream '+ streamId);
+		}
+		else{
+			console.log('at end of stream ' + streamId);
+			return false;
+		}
 	}
-	// nothing to replace - so one stream has stopped
-	console.log("stream " + streamId + " finished");
-	return false; // no stream found
+	playLists[streamId].position = currentPosition;
+	console.log("moving to video " + currentPosition + " in stream " + streamId);
+	var nextV = list[currentPosition];
+	setVideoStream(streamId, nextV);
+	return true;
 }
 
 
