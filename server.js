@@ -7,8 +7,8 @@
  *
  */
 
-var app = require('http').createServer(handler);
-    // , io = require('socket.io').listen(app);
+var app = require('http').createServer(handler)
+    , io = require('socket.io').listen(app);
 var fs = require('fs')
   , exec = require('child_process').exec;
 var path = require('path');
@@ -117,3 +117,12 @@ function handler (req, response) {
                 response.end(data);
             });
 }
+
+io.sockets.on('connection', function (socket) {
+
+    socket.on('videoList', function(data){
+        var vids = fs.readdirSync('videos/');
+        io.to(socket.id).emit('vidList', {'list': vids });
+    });
+
+});
