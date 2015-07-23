@@ -187,6 +187,7 @@ function addClip(locationId, url, start, stop){
 		newConfig.positions[locationId] = [];
 	}
 	newConfig.positions[locationId].push(c);
+	console.log(newConfig);
 
 	var listEl = document.getElementById('vidList' + locationId);
 	var listItem = document.createElement('li');
@@ -199,12 +200,26 @@ function addClip(locationId, url, start, stop){
 	remBut.id = 'remove-' + listItem.id;
 	remBut.className = 'remove';
 	remBut.addEventListener('click', function(ev){
+		// id's are no guide to actual position in the config list
+		// for this, use position in <ol> of the element
+		// <ol> should always reflect current config
+		var listItemEl = document.getElementById(ev.target.id).parentElement;
+		var listEl = listItemEl.parentElement;
+		console.log(listEl);
+		var index = 0;
+		for(var i = 0; i < listEl.childNodes.length; i++){
+			if(listEl.childNodes[i] == listItemEl){
+				index = i;
+			}
+		}
+		console.log(pos);
 		console.log(ev.target.id);
 		var re = /remove-([0-9]*)-([0-9]*)/;
 		var matches = re.exec(ev.target.id);
 		var loc = matches[1];
 		var pos = matches[2];
-		newConfig.positions[loc].splice(pos-1, 1);
+		// get position in list
+		newConfig.positions[loc].splice(index, 1);
 		var listEl = document.getElementById('vidList' + loc);
 		listEl.removeChild(document.getElementById(loc + "-" + pos));
 		console.log(newConfig);
