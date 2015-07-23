@@ -1,5 +1,54 @@
+/******************************************************************************/
+//   Code for the user interface, to build a mosaic
+/******************************************************************************/
+
+// nodejs initiation
+var urlarr = window.location.href.split("/");
+var server = urlarr[0] + "//" + urlarr[2]
+
+// put nodejs stuff in try/catch, so we can still run without
+try{
+	var socket = io.connect(server);
+
+	socket.on('connect', function(client){
+		console.log('connected ');
+		getVideoList();
+	});
+}
+catch(e){
+	console.log('not running on nodejs');
+}
+
+// request list of videos
+var videoList = [];
+function getVideoList(){
+	socket.emit('videoList', {});
+	socket.on('vidList', function(data){
+		videoList = data.list;
+		var selectors = document.getElementsByClassName('clipselector');
+		for(var i = 0; i < selectors.length; i++){
+			for (var j=0; j<videoList.length; j++){
+		        var opt = document.createElement('option');
+		        opt.value = videoList[j];
+		        opt.innerHTML = videoList[j];
+		        selectors[i].appendChild(opt);
+		    }
+		    selectors[i].appendChild(opt);
+			selectors[i].hidden = false;
+		}
+		var manualInputs = document.getElementsByClassName('clipNameInput');
+		for(var i = 0; i < manualInputs.length; i++){
+			manualInputs[i].hidden = true;
+		}
+	});
+}
+
+/******************************************************************************/
+
 var newConfig = {};
 
+
+// a selector to specify which layout we want to use
 function addLayoutSelector(lId){
 	document.getElementById('after').style.marginTop = (height + 50) + 'px';
 	var options = document.createElement('select');
@@ -25,6 +74,8 @@ function addLayoutSelector(lId){
 	aft.appendChild(options);
 }
 
+
+// build and return a widget containing fields to specify a clip for a stream
 function addClipAdder(layoutPosition){
 	// choose a video
 
@@ -42,10 +93,17 @@ function addClipAdder(layoutPosition){
 
 	var clipName = document.createElement('input');
 	clipName.type = 'text';
+	clipName.className = 'clipNameInput'
 	clipName.id = 'clip' + layoutPosition;
 	clipName.name = layoutPosition;
     clipName.placeholder = 'Clip file';
-    
+
+	var select = document.createElement('select');
+	select.id = 'select' + layoutPosition;
+	select.className = 'clipselector';
+	select.hidden = true;
+	newClip.appendChild(select);
+
 	newClip.addEventListener("mouseenter", function(ev){
 		// console.log(ev.target.name);
 		var vId = parseInt(ev.target.name)-1;
@@ -92,11 +150,19 @@ function addClipAdder(layoutPosition){
 }
 
 
-// a new clip has been specified for the given location
+// a new clip has been specified for the given location - get the data
+// from the widget fields and call funtion to add to stream
 function selectClip(locationId){
 	console.log(locationId);
 	var clipEl = document.getElementById('clip' + locationId);
 	var clip = clipEl.value;
+	var clipSel = document.getElementById('select' + locationId);
+	var clipSel = clipSel.value;
+	// if we have a selection and no text, use selection
+	console.log(clipSel + " " + clip);
+	if(clipSel != null && clip === ''){
+		clip = clipSel;
+	}
 	var startEl = document.getElementById('start' + locationId);
 	var start = startEl.value;
 	var stopEl = document.getElementById('end' + locationId);
@@ -108,13 +174,12 @@ function selectClip(locationId){
 	startEl.value = '';
 	stopEl.value = '';
 
-
 }
 
 
-// show a specified clip
+// add a specified clip to a stream
 function addClip(locationId, url, start, stop){
-	console.log(url + " " + start + "-" + stop);
+	// console.log(url + " " + start + "-" + stop);
 	var c = { "path": url,
 				"start": start,
 				"end": stop };
@@ -155,6 +220,9 @@ function addClip(locationId, url, start, stop){
 
 }
 
+
+// add a widget for each stream in the layout, so we can choose what
+// goes in that stream
 function addTrackSpecifiers(layoutId){
 	var cont = document.getElementById('clipSelector');
 	var layout = layouts[layoutId];
@@ -163,6 +231,7 @@ function addTrackSpecifiers(layoutId){
 		cont.appendChild(clipSelector);
 	}
 }
+
 
 // change the layout for the one specified
 function updateLayout(layoutId){
@@ -184,9 +253,10 @@ function updateLayout(layoutId){
 	if(conf.positions != null && conf.positions.length > 0){
 		populateConfig(conf);
 	}
-
 }
 
+
+// copy a configuration
 function copyConfig(old, newId){
 	var newStreamCount = layouts[newId].length;
 	var copy = {};
@@ -237,6 +307,7 @@ function apply(fullScreen){
 }
 
 
+// keyboard interaction
 document.addEventListener('keydown', function(ev){
 	// console.log(ev);
 	if(ev.keyCode == 70){ // F
