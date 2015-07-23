@@ -122,6 +122,9 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('videoList', function(data){
         var vids = fs.readdirSync('videos/');
+        for(var i = 0; i < vids.length; i++){
+            vids[i] = 'videos/' + vids[i];
+        }
         io.to(socket.id).emit('vidList', {'list': vids });
     });
 
