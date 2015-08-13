@@ -16,7 +16,21 @@ try{
 	});
 }
 catch(e){
+	// no nodejs, try xmlhttprequest to php
 	console.log('not running on nodejs');
+	var xhr = new XMLHttpRequest();
+
+	// get filelist
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			var myArr = JSON.parse(xhr.responseText);
+			console.log(xhr.responseText);
+			setVideoList(myArr);
+		}
+	};
+	xhr.open("GET", "vidLister.php", true);
+	xhr.send();
+
 }
 
 // request list of videos
@@ -24,23 +38,26 @@ var videoList = [];
 function getVideoList(){
 	socket.emit('videoList', {});
 	socket.on('vidList', function(data){
-		videoList = data.list;
-		var selectors = document.getElementsByClassName('clipselector');
-		for(var i = 0; i < selectors.length; i++){
-			for (var j=0; j<videoList.length; j++){
-		        var opt = document.createElement('option');
-		        opt.value = videoList[j];
-		        opt.innerHTML = videoList[j];
-		        selectors[i].appendChild(opt);
-		    }
-		    selectors[i].appendChild(opt);
-			selectors[i].hidden = false;
-		}
-		var manualInputs = document.getElementsByClassName('clipNameInput');
-		for(var i = 0; i < manualInputs.length; i++){
-			manualInputs[i].hidden = true;
-		}
+		setVideoList(data.list);
 	});
+}
+
+function setVideoList(videoList){
+	var selectors = document.getElementsByClassName('clipselector');
+	for(var i = 0; i < selectors.length; i++){
+		for (var j=0; j<videoList.length; j++){
+			var opt = document.createElement('option');
+			opt.value = videoList[j];
+			opt.innerHTML = videoList[j];
+			selectors[i].appendChild(opt);
+		}
+		selectors[i].appendChild(opt);
+		selectors[i].hidden = false;
+	}
+	var manualInputs = document.getElementsByClassName('clipNameInput');
+	for(var i = 0; i < manualInputs.length; i++){
+		manualInputs[i].hidden = true;
+	}
 }
 
 /******************************************************************************/
