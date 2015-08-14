@@ -42,6 +42,8 @@ function getVideoList(){
 	});
 }
 
+
+// display the available videos
 function setVideoList(videoList){
 	var selectors = document.getElementsByClassName('clipselector');
 	for(var i = 0; i < selectors.length; i++){
