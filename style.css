@@ -64,7 +64,9 @@ iframe{
 
 #after{
     visibility: hidden;
-    // margin-top:600px;
+}
+
+.controls{
     margin-left:1em;
 }
 
