@@ -11,17 +11,34 @@
     <body>
         <div id='montage' class='montage'></div>
         <script src="mosaic.js"></script>
-        <div id='after'>
+        <div class='controls'>
+          <div id='after'>
+            <h2>Select Layout</h2>
             <div id='layoutSelector'></div>
+            <hr/>
+            <div>
+              <form action="handler.php" method="post" enctype="multipart/form-data">
+                <h2>Upload Videos</h2>
+                <p> Select video to upload:
+                  <input type="file" name="fileToUpload" id="fileToUpload">
+                    <input type="submit" value="Upload" name="submit" id="upldBtn"></p>
+              </form>
+              <hr/>
+            </div>
+            <h2>Assign clips to areas</h2>
             <div id='clipSelector'></div>
-            <!-- div id='config'>Hello</div -->
+          </div>
+          <hr/>
+          <div>
+            <h2>Run</h2>
             <div id='apply'>
                 <!-- button onclick='javascript:load();'>Load</button -->
                 <button onclick='javascript:apply();'>Play</button>
                 <button onclick='javascript:apply(true);'>Run fullscreen</button>
                 <button onclick='javascript:save();'>Save</button>
             </div>
+            <script src="configure.js"></script>
+          </div>
         </div>
-        <script src="configure.js"></script>
     </body>
 </html>
