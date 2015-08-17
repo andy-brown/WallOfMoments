@@ -6,10 +6,11 @@
 <?php
 
 $target_dir = "videos/";
-$target_file = $target_dir.basename($_FILES["fileToUpload"]["name"]);
+$v_fname = basename($_FILES["fileToUpload"]["name"]);
+$target_file = $target_dir.$v_fname;
 $uploadOk = 1;
-/* $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-echo "type ".$imageFileType;
+$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+/* echo "type ".$imageFileType;
 // Check if image file is a actual image or fake image
 if(isset($_POST["submit"])) {
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -20,10 +21,10 @@ if(isset($_POST["submit"])) {
         echo "File is not an image.";
         $uploadOk = 0;
     }
-}
+    } */
 // Check if file already exists
 if (file_exists($target_file)) {
-    echo "Sorry, file already exists.".$target_file;
+    echo "<p>Sorry, ".$v_fname." already exists.</p>";
     $uploadOk = 0;
 }
 // Check file size
@@ -32,18 +33,18 @@ if (file_exists($target_file)) {
     $uploadOk = 0;
 }*/
 // Allow certain file formats
-/*if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-&& $imageFileType != "gif" ) {
-    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+if($imageFileType != "mp4" && $imageFileType != "webm" && $imageFileType != "mpg"
+&& $imageFileType != "mpeg" ) {
+    echo "<p>Sorry, only mpg, mp4, mpeg and webm files are allowed.</p>";
     $uploadOk = 0;
-}*/
+}
 // Check if $uploadOk is set to 0 by an error
 if ($uploadOk == 0) {
-    echo "Sorry, your file was not uploaded.";
+    echo "<p>Sorry, your file was not uploaded.</p>";
 // if everything is ok, try to upload file
 } else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        echo "<p>The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.</p>";
+        echo "<p>The file ".$v_fname. " has been uploaded.</p>";
     } else {
         echo "<p>Sorry, there was an error uploading ".$_FILES["fileToUpload"]["error"]."</p>";
     }
