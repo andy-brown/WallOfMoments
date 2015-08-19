@@ -74,7 +74,7 @@ function addLayoutSelector(lId){
 	document.getElementById('after').style.marginTop = (height + 50) + 'px';
 	var options = document.createElement('select');
 	options.id = 'layoutSelect';
-	for (k in layouts){
+	for (k in layouts){  // layouts defined in mosaic.js... I know...
 		var opt = document.createElement('option');
 		opt.value = k;
 		opt.appendChild(document.createTextNode("layout " + k));
@@ -269,6 +269,30 @@ function addTrackSpecifiers(layoutId){
 }
 
 
+// add section for selecting which video's audio is played
+function addAudioSelector(layoutId){
+	var audioList = document.getElementById('audioSelector');
+	var layout = layouts[layoutId];
+	var currentAudio = config.sound;
+	for(var i = 0; i<layout.length; i++){
+		var radio = document.createElement('input');
+		radio.type = 'radio';
+		radio.name = 'audio';
+		radio.value = i;
+		if((i+1) == currentAudio){
+			radio.checked = 'true';
+		}
+		radio.addEventListener('click', function(){
+			newConfig.sound = (parseInt(this.value)+1);
+		});
+		audioList.appendChild(radio);
+		audioList.appendChild(document.createTextNode(i+1 + " "));
+	}
+	console.log("Audio: " + config.sound);
+
+}
+
+
 // change the layout for the one specified
 function updateLayout(layoutId){
 
@@ -276,6 +300,7 @@ function updateLayout(layoutId){
 	conf.layout = layoutId;
 	playLists = {};
 	emptyElement('montage');
+	emptyElement('audioSelector');
 	var montage = document.getElementById('montage');
 	montage.style.backgroundColor = "white";
 	emptyElement('clipSelector');
@@ -289,6 +314,7 @@ function updateLayout(layoutId){
 	if(conf.positions != null && conf.positions.length > 0){
 		populateConfig(conf);
 	}
+	addAudioSelector(layoutId);
 }
 
 
