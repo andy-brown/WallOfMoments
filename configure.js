@@ -4,7 +4,9 @@
 
 // nodejs initiation
 var urlarr = window.location.href.split("/");
-var server = urlarr[0] + "//" + urlarr[2]
+var server = urlarr[0] + "//" + urlarr[2];
+var vidDir = "videos/";
+
 
 // put nodejs stuff in try/catch, so we can still run without
 try{
@@ -49,7 +51,7 @@ function setVideoList(videoList){
 	for(var i = 0; i < selectors.length; i++){
 		for (var j=0; j<videoList.length; j++){
 			var opt = document.createElement('option');
-			opt.value = videoList[j];
+			opt.value = vidDir + videoList[j];
 			opt.innerHTML = videoList[j];
 			selectors[i].appendChild(opt);
 		}
