@@ -23,7 +23,7 @@ var xmlhttp = new XMLHttpRequest();
 var configFile = "setup.json";
 var cf = get('config');
 if(cf != null){
-	configFile = cf + ".json";
+	configFile = "walls/" + cf + ".json";
 }
 
 if(get('view') != null){
@@ -69,13 +69,13 @@ function setSize(edit){
 		document.body.className = 'view';
 	}
 	var ifs = document.getElementsByTagName('iframe');
-	for(var i = 0; i < ifs.length; i++){
+	/*for(var i = 0; i < ifs.length; i++){
 		ifs[i].style.transform = 'scale(' + ((width/1600)) + ')';
 		var shift = -(1-(width/1600))*1600;
 		ifs[i].style.left = shift/2 + "px";
 		var shift = -(1-(width/1600))*900;
 		ifs[i].style.top = shift/2 + "px";
-	}
+	}*/
 }
 
 
@@ -139,6 +139,7 @@ function createplayLists(streams){
 				if(videos[j].data){
 					var dataObj = new DataSegment(videos[j].data, videos[j].end);
 					playLists[vId].list.push(dataObj);
+					playLists[vId].loaded = true;
 				}
 				else{
 					// encode start and end times in url
@@ -183,10 +184,14 @@ function addStreamToLayout(streamId){
 	var dataEl = document.createElement('iframe');
 	dataEl.id = "vid" + streamId + "data";
 	dataEl.hidden = true;
+	dataEl.style.width = '100%';
+	dataEl.style.top = "-2px";
+	dataEl.style.left = "-2px";
 
 	var vidEl = document.createElement('video');
 	vidEl.id = "vid" + streamId;
 	vidEl.muted = true;
+	vidEl.style.width = "100%";
 
 	// get position of this stream
 	var pos = layout[streamId];
@@ -360,12 +365,12 @@ function cropVideoContainer(vidEl, streamId, crop){
 	// scale to zoom in (and thus crop)
 	var scaledWidth = 100/crop.width;
 	var scaledHeight = 100/crop.height;
-	if(vidEl.width/vidEl.height > aspect){
+	//if(vidEl.width/vidEl.height > aspect){
 		vidEl.style.width = scaledWidth + "%";
-	}
+	/*}
 	else{
 		vidEl.style.height = scaledHeight + "%";
-	}
+	}*/
 	// shift so correct area is visible
 	vidEl.style.marginLeft = -(crop.left*scaledWidth) + "%";
 	vidEl.style.marginTop = -(crop.top*scaledWidth/aspect) + "%";
