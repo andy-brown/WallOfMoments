@@ -13,6 +13,15 @@
         <script src="mosaic.js"></script>
         <div class='controls'>
           <div id='after'>
+              <div>
+                <h2>Run</h2>
+                <div id='apply'>
+                    <!-- button onclick='javascript:load();'>Load</button -->
+                    <button onclick='javascript:apply();'>Play</button>
+                    <button onclick='javascript:apply(true);'>Run fullscreen</button>
+                    <button onclick='javascript:save();'>Save</button>
+                </div>
+                  </div>
             <h2>Select Layout</h2>
             <div id='layoutSelector'></div>
             <hr/>
@@ -33,13 +42,6 @@
           </div>
           <hr/>
           <div>
-            <h2>Run</h2>
-            <div id='apply'>
-                <!-- button onclick='javascript:load();'>Load</button -->
-                <button onclick='javascript:apply();'>Play</button>
-                <button onclick='javascript:apply(true);'>Run fullscreen</button>
-                <button onclick='javascript:save();'>Save</button>
-            </div>
             <script src="configure.js"></script>
           </div>
         </div>
